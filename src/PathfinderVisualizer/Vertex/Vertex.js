@@ -10,7 +10,8 @@ const Vertex = props => {
     isWall,
     onMouseDown,
     onMouseEnter,
-    onMouseUp
+    onMouseUp,
+    distance
   } = props;
   const extraClassName = isFinish
     ? "vertex-finish"
@@ -26,7 +27,9 @@ const Vertex = props => {
       onMouseDown={() => onMouseDown(position)}
       onMouseEnter={() => onMouseEnter(position)}
       onMouseUp={() => onMouseUp(position)}
-    ></div>
+    >
+      {distance === Infinity ? "Inf" : distance}
+    </div>
   );
 };
 

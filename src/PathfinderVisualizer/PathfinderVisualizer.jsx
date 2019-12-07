@@ -1,21 +1,22 @@
 import React, { Component } from "react";
 
+import { dijkstra, backtrackRoute } from "../algorithms/dijkstra";
 import "./PathfinderVisualizer.css";
 import Vertex from "./Vertex/Vertex";
 
-const ROWS = 20;
-const COLUMNS = 50;
-const START_VERTEX_ROW = 10;
-const START_VERTEX_COL = 15;
-const FINISH_VERTEX_ROW = 10;
-const FINISH_VERTEX_COL = 35;
+const ROWS = 6;
+const COLUMNS = 6;
+const START_VERTEX_ROW = 1;
+const START_VERTEX_COL = 1;
+const FINISH_VERTEX_ROW = 4;
+const FINISH_VERTEX_COL = 4;
 
 export default class PathfinderVisualizer extends Component {
   constructor() {
     super();
     this.state = {
-      grid: [],
-      mouseIsPressed: false
+      grid: []
+      //   vizualizerOn: false
     };
   }
   componentDidMount() {
@@ -41,35 +42,56 @@ export default class PathfinderVisualizer extends Component {
     const resetGrid = createInitialGrid();
     this.setState({ grid: resetGrid });
   };
+
+  visualizeAlgorithm = () => {
+    console.log("starting the algorithm");
+    const { grid } = this.state;
+    const startVertex = grid[START_VERTEX_ROW][START_VERTEX_COL];
+    const finishVertex = grid[FINISH_VERTEX_ROW][FINISH_VERTEX_COL];
+    const visitedInOrder = dijkstra(grid, startVertex, finishVertex);
+    // this.setState({ vizualizerOn: true });
+  };
   render() {
-    const { grid, mouseIsPressed } = this.state;
+    const { grid } = this.state;
     return (
-      <div className="grid">
+      <>
+        <button className="start" onClick={this.visualizeAlgorithm}>
+          Start
+        </button>
         <button className="reset" onClick={this.resetGrid}>
           Reset Grid
         </button>
-        {grid.map((row, row_index) => {
-          return (
-            <div key={row_index}>
-              {row.map((vertex, vertex_index) => {
-                const { position, isFinish, isStart, isWall } = vertex;
-                return (
-                  <Vertex
-                    key={vertex_index}
-                    position={position}
-                    isFinish={isFinish}
-                    isStart={isStart}
-                    onMouseDown={position => this.handleMouseDown(position)}
-                    onMouseEnter={position => this.handleMouseEnter(position)}
-                    onMouseUp={() => this.handleMouseUp()}
-                    isWall={isWall}
-                  ></Vertex>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
+        <div className="grid">
+          {grid.map((row, row_index) => {
+            return (
+              <div key={row_index}>
+                {row.map((vertex, vertex_index) => {
+                  const {
+                    position,
+                    isFinish,
+                    isStart,
+                    isWall,
+                    distance
+                  } = vertex;
+                  return (
+                    <Vertex
+                      key={vertex_index}
+                      position={position}
+                      isFinish={isFinish}
+                      isStart={isStart}
+                      onMouseDown={position => this.handleMouseDown(position)}
+                      onMouseEnter={position => this.handleMouseEnter(position)}
+                      onMouseUp={() => this.handleMouseUp()}
+                      isWall={isWall}
+                      distance={distance}
+                    ></Vertex>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </>
     );
   }
 }
@@ -108,6 +130,5 @@ const createGridWithWalls = (grid, position) => {
     isWall: !vertex.isWall
   };
   wallGrid[position.row][position.col] = newVertex;
-  console.log(vertex);
   return wallGrid;
 };
