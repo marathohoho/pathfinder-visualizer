@@ -1,0 +1,10 @@
+export const ROWS = 20;
+export const COLUMNS = window.innerWidth / 35;
+export const START_VERTEX_ROW = 1;
+export const START_VERTEX_COL = 1;
+export const FINISH_VERTEX_ROW = 3;
+export const FINISH_VERTEX_COL = 3;
+export const FAST = 10;
+export const MEDIUM = 40;
+export const SLOW = 80;
+export const speed = SLOW;

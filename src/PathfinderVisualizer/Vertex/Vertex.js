@@ -11,7 +11,10 @@ const Vertex = props => {
     onMouseDown,
     onMouseEnter,
     onMouseUp,
-    distance
+    distance,
+    mouseIsPressed,
+    isVisited,
+    isPath
   } = props;
   const extraClassName = isFinish
     ? "vertex-finish"
@@ -19,17 +22,20 @@ const Vertex = props => {
     ? "vertex-start"
     : isWall
     ? "vertex-wall"
+    : isPath
+    ? "vertex-shortest-path"
+    : isVisited
+    ? "vertex-visited"
     : "";
+
   return (
-    <div
+    <td
       id={`vertex-${position.row}-${position.col}`}
       className={`vertex ${extraClassName}`}
       onMouseDown={() => onMouseDown(position)}
       onMouseEnter={() => onMouseEnter(position)}
       onMouseUp={() => onMouseUp(position)}
-    >
-      {distance === Infinity ? "Inf" : distance}
-    </div>
+    ></td>
   );
 };
 
@@ -40,7 +46,8 @@ Vertex.propTypes = {
   isWall: PropTypes.bool,
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
-  onMouseEnter: PropTypes.func
+  onMouseEnter: PropTypes.func,
+  mouseIsPressed: PropTypes.bool
 };
 
 export default Vertex;
