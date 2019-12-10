@@ -16,6 +16,12 @@ import {
 import "./PathfinderVisualizer.css";
 import Vertex from "./Vertex/Vertex";
 
+/**
+ *
+ * 1. Change componendDidMount to useEffect from hooks
+ * 2. Convert class components to functional components
+ *
+ */
 export default class PathfinderVisualizer extends Component {
   constructor() {
     super();
@@ -26,7 +32,7 @@ export default class PathfinderVisualizer extends Component {
     };
   }
   componentDidMount() {
-    const grid = createInitialGrid(this.state.start_finish_coordinates);
+    const grid = createInitialGrid();
     this.setState({ grid });
   }
 
@@ -42,7 +48,7 @@ export default class PathfinderVisualizer extends Component {
       console.log("activate the drag action");
     } else {
       if (!grid[row][col].isStart) {
-        const grid = createInitialGrid(this.state.start_finish_coordinates);
+        const grid = createInitialGrid();
         this.setState({ grid });
         if (!grid[row][col].isStart && !grid[row][col].isFinish) {
           const wallGrid = createGridWithWalls(grid, position);
