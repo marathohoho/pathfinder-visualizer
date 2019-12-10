@@ -22,45 +22,43 @@ export default class PathfinderVisualizer extends Component {
     this.state = {
       grid: [],
       mouseIsPressed: false,
-      isDragging: false,
-
-      originalX: 0,
-      originalY: 0,
-
-      translateX: 0,
-      translateY: 0,
-
-      lastTranslateX: 0,
-      lastTranslateY: 0
+      isDragging: false
     };
   }
   componentDidMount() {
-    const grid = createInitialGrid();
+    const grid = createInitialGrid(this.state.start_finish_coordinates);
     this.setState({ grid });
   }
 
   handleMouseDown = position => {
-    if (!this.state.grid[position.row][position.col].isStart) {
-      const grid = createInitialGrid();
-      this.setState({ grid });
-      if (
-        !this.state.grid[position.row][position.col].isStart &&
-        !this.state.grid[position.row][position.col].isFinish
-      ) {
-        const wallGrid = createGridWithWalls(this.state.grid, position);
-        this.setState({ grid: wallGrid, mouseIsPressed: true });
-        console.log("Updated grid after wall added: ", this.state.grid);
+    const { grid } = this.state;
+
+    //   check if the mouse is down on eith start or finish cell
+    const { row, col } = position;
+    if (
+      (row === START_VERTEX_ROW && col === START_VERTEX_COL) ||
+      (row === FINISH_VERTEX_ROW && col === FINISH_VERTEX_COL)
+    ) {
+      console.log("activate the drag action");
+    } else {
+      if (!grid[row][col].isStart) {
+        const grid = createInitialGrid(this.state.start_finish_coordinates);
+        this.setState({ grid });
+        if (!grid[row][col].isStart && !grid[row][col].isFinish) {
+          const wallGrid = createGridWithWalls(grid, position);
+          this.setState({ grid: wallGrid, mouseIsPressed: true });
+          console.log("Updated grid after wall added: ", grid);
+        }
       }
     }
   };
 
   handleMouseEnter = position => {
+    const { row, col } = position;
+    const { grid } = this.state;
     if (!this.state.mouseIsPressed) return;
-    if (
-      !this.state.grid[position.row][position.col].isStart &&
-      !this.state.grid[position.row][position.col].isFinish
-    ) {
-      const wallGrid = createGridWithWalls(this.state.grid, position);
+    if (!grid[row][col].isStart && !grid[row][col].isFinish) {
+      const wallGrid = createGridWithWalls(grid, position);
       this.setState({ grid: wallGrid });
     }
   };
