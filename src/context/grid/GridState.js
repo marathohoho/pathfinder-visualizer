@@ -3,16 +3,20 @@ import gridContext from "./gridContext";
 import gridReducer from "./gridReducer";
 
 import {
+  START_VERTEX_ROW_,
+  START_VERTEX_COL_,
+  FINISH_VERTEX_ROW_,
+  FINISH_VERTEX_COL_
+} from "../../parameters";
+
+import {
   SET_GRID,
-  GET_GRID,
   SET_STARTING_ROW,
-  GET_STARTING_ROW,
   SET_STARTING_COL,
-  GET_STARTING_COL,
   SET_FINISH_ROW,
-  GET_FINISH_ROW,
+  SET_FINISH_COL,
   SET_MOUSE_IS_PRESSED,
-  GET_MOUSE_IS_PRESSED
+  IS_DRAGGING
 } from "../types.js";
 
 /**
@@ -28,50 +32,75 @@ const GridState = props => {
   const initialState = {
     grid: [],
     mouseIsPressed: false,
-    isDragging: false
+    isDragging: false,
+    start_vertex_row: START_VERTEX_ROW_,
+    start_vertex_col: START_VERTEX_COL_,
+    finish_vertex_row: FINISH_VERTEX_ROW_,
+    finish_vertex_col: FINISH_VERTEX_COL_
   };
+
+  /**
+   *
+   * this is where we set all the state variables
+   * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+   */
   const [state, dispatch] = useReducer(gridReducer, initialState);
-  const setGrid_ = (grid, type) => {
-    dispatch({ type: SET_GRID, payload: { grid, type } });
+
+  const setGrid = grid => {
+    dispatch({ type: SET_GRID, payload: grid });
   };
+
+  const setStart = position => {
+    dispatch({ type: SET_STARTING_ROW, payload: position.row });
+    dispatch({ type: SET_STARTING_COL, payload: position.col });
+  };
+
+  const setFinish = position => {
+    dispatch({ type: SET_FINISH_ROW, payload: position.row });
+    dispatch({ type: SET_FINISH_COL, payload: position.col });
+  };
+
+  const setMouseIsPressed = pressed => {
+    dispatch({ type: SET_MOUSE_IS_PRESSED, payload: pressed });
+  };
+
+  const setIsDragging = started_dragging => {
+    dispatch({ type: IS_DRAGGING, payload: started_dragging });
+  };
+
+  /**
+   * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   * this is where we set all the state variables
+   */
+
+  /**
+   * this is where we return the state variables
+   * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+   */
   return (
-    <gridContext.Provider value={{ grid: state.grid, setGrid_ }}>
+    <gridContext.Provider
+      value={{
+        grid: state.grid,
+        isDragging: state.isDragging,
+        mouseIsPressed: state.mouseIsPressed,
+        start_vertex_row: state.start_vertex_row,
+        start_vertex_col: state.start_vertex_col,
+        finish_vertex_row: state.finish_vertex_row,
+        finish_vertex_col: state.finish_vertex_col,
+        setGrid,
+        setStart,
+        setFinish,
+        setMouseIsPressed,
+        setIsDragging
+      }}
+    >
       {props.children}
     </gridContext.Provider>
   );
 };
+/**
+ * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ * this is where we return the state variables
+ */
 
 export default GridState;
-
-// // *************************************
-// import alertReducer from "./alertReducer";
-// import alertContext from "./alertContext";
-
-// import { SET_ALERT, REMOVE_ALERT } from "../types";
-
-const AlertState = props => {
-  const initialState = {
-    alert: null
-  };
-  const [state, dispatch] = useReducer(alertReducer, initialState);
-
-  //set alert
-  const setAlert_ = (message, type) => {
-    dispatch({ type: SET_ALERT, payload: { message, type } });
-    const timeout = 5000;
-    setTimeout(() => dispatch({ type: REMOVE_ALERT }), timeout);
-  };
-
-  return (
-    <alertContext.Provider
-      value={{
-        alert: state.alert,
-        setAlert_
-      }}
-    >
-      {props.children}
-    </alertContext.Provider>
-  );
-};
-
-export default AlertState;

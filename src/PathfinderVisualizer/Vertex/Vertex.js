@@ -11,8 +11,6 @@ const Vertex = props => {
     onMouseDown,
     onMouseEnter,
     onMouseUp,
-    distance,
-    mouseIsPressed,
     isVisited,
     isPath
   } = props;

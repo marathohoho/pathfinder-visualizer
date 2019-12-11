@@ -1,40 +1,39 @@
-import {
-  ROWS,
-  COLUMNS,
-  START_VERTEX_ROW,
-  START_VERTEX_COL,
-  FINISH_VERTEX_ROW,
-  FINISH_VERTEX_COL
-} from "../../parameters";
+import { ROWS, COLUMNS } from "../../parameters";
 
-export const createInitialGrid = () => {
+export const createInitialGrid = start_finish => {
   const grid = [];
   for (let row = 0; row < ROWS; row++) {
     const thisRow = [];
     for (let col = 0; col < COLUMNS; col++) {
-      thisRow.push(createVertex({ row, col }));
+      thisRow.push(createVertex({ row, col }, start_finish));
     }
     grid.push(thisRow);
   }
   return grid;
 };
 
-const createVertex = position => {
+const createVertex = (position, start_finish) => {
+  const {
+    start_vertex_row,
+    start_vertex_col,
+    finish_vertex_row,
+    finish_vertex_col
+  } = start_finish;
   return {
     position,
     isStart:
-      position.row === START_VERTEX_ROW && position.col === START_VERTEX_COL,
+      position.row === start_vertex_row && position.col === start_vertex_col,
     isFinish:
-      position.row === FINISH_VERTEX_ROW && position.col === FINISH_VERTEX_COL,
+      position.row === finish_vertex_row && position.col === finish_vertex_col,
     distance: Infinity,
     isVisited: false,
     isWall: false,
     isPath: false,
     previousVertex: null,
     draggable:
-      (position.row === START_VERTEX_ROW &&
-        position.col === START_VERTEX_COL) ||
-      (position.row === FINISH_VERTEX_ROW && position.col === FINISH_VERTEX_COL)
+      (position.row === start_vertex_row &&
+        position.col === start_vertex_col) ||
+      (position.row === finish_vertex_row && position.col === finish_vertex_col)
   };
 };
 
