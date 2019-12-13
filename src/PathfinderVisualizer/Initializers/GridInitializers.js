@@ -40,7 +40,6 @@ const createVertex = (position, start_finish) => {
 export const createGridWithWalls = (grid, position) => {
   const wallGrid = [...grid];
   const vertex = wallGrid[position.row][position.col];
-  console.log("setting a new walled grid");
   const newVertex = {
     ...vertex,
     isWall: !vertex.isWall, //changed here

@@ -1,5 +1,5 @@
-import React, { useEffect, useContext, useState } from "react";
-import { dijkstra, backtrackRoute } from "../algorithms/dijkstra";
+import React, { useEffect, useContext } from "react";
+
 import GridContext from "../context/grid/gridContext";
 import "./PathfinderVisualizer.css";
 import Vertex from "./Vertex/Vertex";
@@ -10,9 +10,11 @@ import {
   swapVertices,
   updateGrid
 } from "./Initializers/GridInitializers";
+import { dijkstra, backtrackRoute } from "../algorithms/dijkstra";
+import { resetGrid } from "../PathfinderVisualizer/Initializers/GridReset";
+import { animateAlgorithm } from "./Visualizers/Visualize";
 
 import { ROWS, COLUMNS } from "../parameters";
-import { cloneWithoutLoc } from "@babel/types";
 
 const PathfinderVisualizer = () => {
   const gridContext = useContext(GridContext);
@@ -26,11 +28,6 @@ const PathfinderVisualizer = () => {
     finish_vertex_row,
     finish_vertex_col,
     mouseIsPressed,
-    setIsDragging,
-    isDragging,
-    setOriginal,
-    original_row,
-    original_col,
     setStart,
     setFinish
   } = gridContext;
@@ -118,7 +115,6 @@ const PathfinderVisualizer = () => {
 
     if (!grid[row][col].isStart && !grid[row][col].isFinish) {
       const wallGrid = createGridWithWalls(grid, position);
-
       setGrid(wallGrid);
       updateGrid(wallGrid);
       setMouseIsPressed(true);
@@ -140,60 +136,7 @@ const PathfinderVisualizer = () => {
     setMouseIsPressed(false);
   };
 
-  const resetGrid = () => {
-    const resetGrid = createInitialGrid(start_finish);
-    setGrid(resetGrid);
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLUMNS; col++) {
-        let thisVertex = grid[row][col];
-        if (thisVertex.isStart)
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-start";
-        else if (thisVertex.isFinish)
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-finish";
-        else {
-          document.getElementById(`vertex-${row}-${col}`).className = "vertex ";
-        }
-      }
-    }
-  };
-
-  const animateShortestPath = backtrackRoute => {
-    for (let i = 0; i < backtrackRoute.length; i++) {
-      setTimeout(() => {
-        const vertex = backtrackRoute[i];
-        document.getElementById(
-          `vertex-${vertex.position.row}-${vertex.position.col}`
-        ).className = "vertex vertex-shortest-path";
-      }, 35 * i);
-    }
-    document.getElementById("btnStart").disabled = false;
-    document.getElementById("btnReset").disabled = false;
-  };
-
-  const animateAlgorithm = (visitedInOrder, backtrackedVertices) => {
-    for (let i = 0; i <= visitedInOrder.length; i++) {
-      if (i === visitedInOrder.length) {
-        setTimeout(() => {
-          animateShortestPath(backtrackedVertices);
-        }, 35 * i);
-        return;
-      }
-      setTimeout(() => {
-        const row = visitedInOrder[i].position.row;
-        const col = visitedInOrder[i].position.col;
-        const isStart = visitedInOrder[i].isStart;
-        const isFinish = visitedInOrder[i].isFinish;
-
-        if (!(isStart || isFinish))
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-visited";
-      }, 35 * i);
-    }
-  };
-
-  function visualizeAlgorithm() {
+  const visualizeAlgorithm = () => {
     document.getElementById("btnStart").disabled = true;
     document.getElementById("btnReset").disabled = true;
     for (let row = 0; row < ROWS; row++) {
@@ -213,13 +156,12 @@ const PathfinderVisualizer = () => {
           document.getElementById(`vertex-${row}-${col}`).className = "vertex";
       }
     }
-
     const startVertex = grid[start_vertex_row][start_vertex_col];
     const finishVertex = grid[finish_vertex_row][finish_vertex_col];
     const visitedInOrder = dijkstra(grid, startVertex, finishVertex);
     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
     animateAlgorithm(visitedInOrder, backtrackedVertices);
-  }
+  };
 
   return (
     <>
@@ -232,7 +174,11 @@ const PathfinderVisualizer = () => {
         >
           Start
         </button>
-        <button id="btnReset" className="reset" onClick={() => resetGrid()}>
+        <button
+          id="btnReset"
+          className="reset"
+          onClick={() => resetGrid(grid, setGrid, start_finish)}
+        >
           Reset Grid
         </button>
       </div>
@@ -250,8 +196,7 @@ const PathfinderVisualizer = () => {
                     isWall,
                     distance,
                     isVisited,
-                    isPath,
-                    draggable
+                    isPath
                   } = vertex;
                   return (
                     <Vertex

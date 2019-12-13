@@ -18,7 +18,7 @@
 .vertex:hover {
   outline: 1px solid rgb(255, 255, 255);
   /* background: white; */
-  opacity: 50%;
+  /* opacity: 50%; */
   display: inline-block;
 }
 .vertex-finish {
