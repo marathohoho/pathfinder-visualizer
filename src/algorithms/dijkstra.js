@@ -15,24 +15,13 @@ export const dijkstra = (grid, start, finish) => {
   while (unvisitedVertices.length !== 0) {
     getTheClosestVerticesFirst(unvisitedVertices);
     const closestVertex = unvisitedVertices.shift();
-    console.log("closes vertex: ", closestVertex.position);
-    console.log("closes vertex is wall? : ", closestVertex.isWall);
-    console.log("closes vertex is visited? : ", closestVertex.isVisited);
 
-    // skip the wall vertex
     if (closestVertex.isWall) continue;
-    // if the closes vertex is infinity
-    // there must be only walls surrounding us
-    // return the visitedVertices
     if (closestVertex.distance === Infinity) return visitedInOrder;
     closestVertex.isVisited = true;
-
     visitedInOrder.push(closestVertex);
     if (closestVertex === finish) return visitedInOrder;
     updateUnvisitedNeighbors(closestVertex, grid);
-    console.log("closes vertex: ", closestVertex.position);
-    console.log("closes vertex is wall? : ", closestVertex.isWall);
-    console.log("closes vertex is visited? : ", closestVertex.isVisited);
   }
 };
 
@@ -50,7 +39,6 @@ const getTheClosestVerticesFirst = unvisitedVertices => {
 };
 
 const updateUnvisitedNeighbors = (vertex, grid) => {
-  // find the next unvisited neighbors
   const unvisitedNeighbors = getUnvisitedNeighbors(vertex, grid);
   for (const neighbor of unvisitedNeighbors) {
     neighbor.distance = vertex.distance + 1;
@@ -61,37 +49,22 @@ const updateUnvisitedNeighbors = (vertex, grid) => {
 const getUnvisitedNeighbors = (vertex, grid) => {
   const neighbors = [];
   const { row, col } = vertex.position;
-
-  //   if (row > 0 && col > 0) neighbors.push(grid[row - 1][col - 1]);
-  //   if (row > 0) neighbors.push(grid[row - 1][col]);
-  //   if (col < grid[0].length - 1 && row > 0)
-  //     neighbors.push(grid[row - 1][col + 1]);
-  //   if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
-  //   if (row < grid.length - 1 && col < grid[0].length - 1)
-  //     neighbors.push(grid[row + 1][col + 1]);
-  //   if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
-  //   if (col > 0) neighbors.push(grid[row][col - 1]);
-
-  //   make a up/down/left/move to the next neighbor
-
-  //   if (row < grid.length - 1 && col > 0) neighbors.push(grid[row + 1][col - 1]);
   if (row > 0) neighbors.push(grid[row - 1][col]);
   if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
   if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
   if (col > 0) neighbors.push(grid[row][col - 1]);
-
-  //   //   return only the neighbor that is not visited
   return neighbors.filter(neighbor => !neighbor.isVisited);
 };
 
-export const backtrackRoute = finish => {
+export const backtrackRoute = (finish, start) => {
   const backtrackedVertices = [];
   let currentVertex = finish;
-  while (currentVertex !== null) {
+  currentVertex = currentVertex.previousVertex;
+  if (currentVertex === null) return backtrackedVertices;
+  while (currentVertex !== start) {
     currentVertex.isPath = true;
     backtrackedVertices.unshift(currentVertex);
     currentVertex = currentVertex.previousVertex;
   }
-  console.log(backtrackedVertices);
   return backtrackedVertices;
 };

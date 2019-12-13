@@ -14,7 +14,13 @@ import {
   SET_FINISH_ROW,
   SET_FINISH_COL,
   SET_MOUSE_IS_PRESSED,
-  IS_DRAGGING
+  IS_DRAGGING,
+  SET_ORIGINAL_ROW,
+  SET_ORIGINAL_COL,
+  SET_TRANSLATE_ROW,
+  SET_TRANSLATE_COL,
+  SET_LAST_TRANSLATE_ROW,
+  SET_LAST_TRANSLATE_COL
 } from "../types.js";
 
 export default (state, action) => {
@@ -36,9 +42,27 @@ export default (state, action) => {
 
     case SET_MOUSE_IS_PRESSED:
       return { ...state, mouseIsPressed: action.payload };
-
+    // related to dragging :
     case IS_DRAGGING:
       return { ...state, isDragging: action.payload };
+
+    case SET_ORIGINAL_ROW:
+      return { ...state, original_row: action.payload };
+
+    case SET_ORIGINAL_COL:
+      return { ...state, original_col: action.payload };
+
+    case SET_TRANSLATE_ROW:
+      return { ...state, translate_row: action.payload };
+
+    case SET_TRANSLATE_COL:
+      return { ...state, translate_col: action.payload };
+
+    case SET_LAST_TRANSLATE_ROW:
+      return { ...state, last_translate_row: action.payload };
+
+    case SET_LAST_TRANSLATE_COL:
+      return { ...state, last_translate_col: action.payload };
 
     default:
       return state;

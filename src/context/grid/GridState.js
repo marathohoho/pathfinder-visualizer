@@ -16,7 +16,13 @@ import {
   SET_FINISH_ROW,
   SET_FINISH_COL,
   SET_MOUSE_IS_PRESSED,
-  IS_DRAGGING
+  IS_DRAGGING,
+  SET_ORIGINAL_ROW,
+  SET_ORIGINAL_COL,
+  SET_TRANSLATE_ROW,
+  SET_TRANSLATE_COL,
+  SET_LAST_TRANSLATE_ROW,
+  SET_LAST_TRANSLATE_COL
 } from "../types.js";
 
 /**
@@ -31,19 +37,26 @@ import {
 const GridState = props => {
   const initialState = {
     grid: [],
+
     mouseIsPressed: false,
-    isDragging: false,
+
     start_vertex_row: START_VERTEX_ROW_,
     start_vertex_col: START_VERTEX_COL_,
     finish_vertex_row: FINISH_VERTEX_ROW_,
-    finish_vertex_col: FINISH_VERTEX_COL_
+    finish_vertex_col: FINISH_VERTEX_COL_,
+
+    isDragging: false,
+
+    original_row: 0,
+    original_col: 0,
+
+    translate_row: 0,
+    translate_col: 0,
+
+    last_translate_row: 0,
+    last_translate_col: 0
   };
 
-  /**
-   *
-   * this is where we set all the state variables
-   * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-   */
   const [state, dispatch] = useReducer(gridReducer, initialState);
 
   const setGrid = grid => {
@@ -64,34 +77,50 @@ const GridState = props => {
     dispatch({ type: SET_MOUSE_IS_PRESSED, payload: pressed });
   };
 
+  //   for dragging actions
   const setIsDragging = started_dragging => {
     dispatch({ type: IS_DRAGGING, payload: started_dragging });
   };
 
-  /**
-   * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   * this is where we set all the state variables
-   */
+  const setOriginal = position => {
+    dispatch({ type: SET_ORIGINAL_ROW, payload: position.row });
+    dispatch({ type: SET_ORIGINAL_COL, payload: position.col });
+  };
 
-  /**
-   * this is where we return the state variables
-   * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-   */
+  const setTranslate = position => {
+    dispatch({ type: SET_TRANSLATE_ROW, payload: position.row });
+    dispatch({ type: SET_TRANSLATE_COL, payload: position.col });
+  };
+
+  const setLastTranslate = position => {
+    dispatch({ type: SET_LAST_TRANSLATE_ROW, payload: position.row });
+    dispatch({ type: SET_LAST_TRANSLATE_COL, payload: position.col });
+  };
+
   return (
     <gridContext.Provider
       value={{
         grid: state.grid,
-        isDragging: state.isDragging,
+        setGrid,
+        setStart,
+        setFinish,
+        setMouseIsPressed,
+        setIsDragging,
+        setOriginal,
+        setTranslate,
+        setLastTranslate,
         mouseIsPressed: state.mouseIsPressed,
         start_vertex_row: state.start_vertex_row,
         start_vertex_col: state.start_vertex_col,
         finish_vertex_row: state.finish_vertex_row,
         finish_vertex_col: state.finish_vertex_col,
-        setGrid,
-        setStart,
-        setFinish,
-        setMouseIsPressed,
-        setIsDragging
+        isDragging: state.isDragging,
+        original_row: state.original_row,
+        original_col: state.original_col,
+        translate_row: state.translate_row,
+        translate_col: state.translate_col,
+        last_translate_row: state.last_translate_row,
+        last_translate_col: state.last_translate_col
       }}
     >
       {props.children}

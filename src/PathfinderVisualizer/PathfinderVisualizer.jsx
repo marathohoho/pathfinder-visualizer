@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { dijkstra, backtrackRoute } from "../algorithms/dijkstra";
 import GridContext from "../context/grid/gridContext";
 import "./PathfinderVisualizer.css";
@@ -6,10 +6,13 @@ import Vertex from "./Vertex/Vertex";
 
 import {
   createInitialGrid,
-  createGridWithWalls
+  createGridWithWalls,
+  swapVertices,
+  updateGrid
 } from "./Initializers/GridInitializers";
 
 import { ROWS, COLUMNS } from "../parameters";
+import { cloneWithoutLoc } from "@babel/types";
 
 const PathfinderVisualizer = () => {
   const gridContext = useContext(GridContext);
@@ -22,7 +25,14 @@ const PathfinderVisualizer = () => {
     start_vertex_col,
     finish_vertex_row,
     finish_vertex_col,
-    mouseIsPressed
+    mouseIsPressed,
+    setIsDragging,
+    isDragging,
+    setOriginal,
+    original_row,
+    original_col,
+    setStart,
+    setFinish
   } = gridContext;
 
   const start_finish = {
@@ -33,27 +43,86 @@ const PathfinderVisualizer = () => {
   };
 
   useEffect(() => {
-    console.log("setting up the grid");
+    // eslint-disable-next-line
     setGrid(createInitialGrid(start_finish));
   }, []);
-  //   [...Object.values(gridContext), start_finish]
-  //   componentDidMount() {
-  //     const grid = createInitialGrid(this.state.start_finish_coordinates);
-  //     this.setState({ grid });
-  //   }
+
+  const handleDragStart = (event, position, vertex) => {
+    const { row, col } = position;
+
+    if (
+      !(row === start_vertex_row && col === start_vertex_col) &&
+      !(row === finish_vertex_row && col === finish_vertex_col)
+    ) {
+      return;
+    } else {
+      const vertexData = JSON.stringify(vertex);
+      event.dataTransfer.setData("vertex_data", vertexData);
+    }
+
+    return;
+  };
+  const handleDragOver = event => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event, new_position) => {
+    const vertex = JSON.parse(event.dataTransfer.getData("vertex_data"));
+    if (vertex.isStart || vertex.isFinish) {
+      if (
+        (new_position.row === finish_vertex_row &&
+          new_position.col === finish_vertex_col) ||
+        (new_position.row === start_vertex_row &&
+          new_position.col === start_vertex_col)
+      )
+        return;
+    }
+    // reassign the start or finish vertex depending on the vertex.isFinish \\ vertex.isStart
+    if (vertex.isStart) {
+      setStart(new_position);
+    } else {
+      setFinish(new_position);
+    }
+    setGrid(swapVertices(grid, vertex, new_position));
+    setGrid(updateGrid(grid));
+    clearTheVisualOfVertex();
+    event.dataTransfer.clearData();
+  };
+
+  const handleDrag = position => {
+    return;
+  };
+
+  const clearTheVisualOfVertex = () => {
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLUMNS; col++) {
+        let thisVertex = grid[row][col];
+        if (thisVertex.isStart)
+          document.getElementById(`vertex-${row}-${col}`).className =
+            "vertex vertex-start";
+        else if (thisVertex.isFinish)
+          document.getElementById(`vertex-${row}-${col}`).className =
+            "vertex vertex-finish";
+        else if (thisVertex.isWall)
+          document.getElementById(`vertex-${row}-${col}`).className =
+            "vertex vertex-wall vertex-non-draggable";
+        else {
+          document.getElementById(`vertex-${row}-${col}`).className = "vertex ";
+        }
+      }
+    }
+  };
+
   const handleMouseDown = position => {
     const { row, col } = position;
-    if (
-      (row === start_vertex_row && col === start_vertex_col) ||
-      (row === finish_vertex_row && col === finish_vertex_col)
-    ) {
-      console.log("activate the drag action");
-    } else {
-      if (!grid[row][col].isStart && !grid[row][col].isFinish) {
-        const wallGrid = createGridWithWalls(grid, position);
-        setGrid(wallGrid);
-        setMouseIsPressed(true);
-      }
+
+    if (!grid[row][col].isStart && !grid[row][col].isFinish) {
+      const wallGrid = createGridWithWalls(grid, position);
+
+      setGrid(wallGrid);
+      updateGrid(wallGrid);
+      setMouseIsPressed(true);
+      clearTheVisualOfVertex();
     }
   };
 
@@ -63,6 +132,8 @@ const PathfinderVisualizer = () => {
     if (!grid[row][col].isStart && !grid[row][col].isFinish) {
       const wallGrid = createGridWithWalls(grid, position);
       setGrid(wallGrid);
+      updateGrid(wallGrid);
+      clearTheVisualOfVertex();
     }
   };
   const handleMouseUp = position => {
@@ -70,36 +141,32 @@ const PathfinderVisualizer = () => {
   };
 
   const resetGrid = () => {
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLUMNS; col++) {
-        if (grid[row][col].isWall)
-          document.getElementById(`vertex-${row}-${col}`).className = "vertex";
-        if (
-          grid[row][col].isVisited &&
-          !(grid[row][col].isFinish || grid[row][col].isStart)
-        )
-          document.getElementById(`vertex-${row}-${col}`).className = "vertex";
-        if (grid[row][col].isStart)
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-start";
-        if (grid[row][col].isFinish)
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-finish";
-      }
-    }
     const resetGrid = createInitialGrid(start_finish);
     setGrid(resetGrid);
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLUMNS; col++) {
+        let thisVertex = grid[row][col];
+        if (thisVertex.isStart)
+          document.getElementById(`vertex-${row}-${col}`).className =
+            "vertex vertex-start";
+        else if (thisVertex.isFinish)
+          document.getElementById(`vertex-${row}-${col}`).className =
+            "vertex vertex-finish";
+        else {
+          document.getElementById(`vertex-${row}-${col}`).className = "vertex ";
+        }
+      }
+    }
   };
 
   const animateShortestPath = backtrackRoute => {
-    console.log(backtrackRoute);
     for (let i = 0; i < backtrackRoute.length; i++) {
       setTimeout(() => {
         const vertex = backtrackRoute[i];
         document.getElementById(
           `vertex-${vertex.position.row}-${vertex.position.col}`
         ).className = "vertex vertex-shortest-path";
-      }, 40 * i);
+      }, 35 * i);
     }
     document.getElementById("btnStart").disabled = false;
     document.getElementById("btnReset").disabled = false;
@@ -110,8 +177,7 @@ const PathfinderVisualizer = () => {
       if (i === visitedInOrder.length) {
         setTimeout(() => {
           animateShortestPath(backtrackedVertices);
-        }, 40 * i);
-        console.log("done2");
+        }, 35 * i);
         return;
       }
       setTimeout(() => {
@@ -123,38 +189,35 @@ const PathfinderVisualizer = () => {
         if (!(isStart || isFinish))
           document.getElementById(`vertex-${row}-${col}`).className =
             "vertex vertex-visited";
-      }, 40 * i);
+      }, 35 * i);
     }
   };
 
   function visualizeAlgorithm() {
     document.getElementById("btnStart").disabled = true;
     document.getElementById("btnReset").disabled = true;
-    console.log(grid);
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLUMNS; col++) {
-        if (
-          grid[row][col].isVisited &&
-          !(grid[row][col].isFinish || grid[row][col].isStart)
-        )
-          document.getElementById(`vertex-${row}-${col}`).className = "vertex";
-        if (grid[row][col].isStart)
+        let thisVertex = grid[row][col];
+
+        if (thisVertex.isStart)
           document.getElementById(`vertex-${row}-${col}`).className =
             "vertex vertex-start";
-        if (grid[row][col].isFinish)
+        else if (thisVertex.isFinish)
           document.getElementById(`vertex-${row}-${col}`).className =
             "vertex vertex-finish";
-        if (grid[row][col].isWall)
+        else if (thisVertex.isWall)
           document.getElementById(`vertex-${row}-${col}`).className =
             "vertex vertex-wall";
+        else if (thisVertex.isVisited)
+          document.getElementById(`vertex-${row}-${col}`).className = "vertex";
       }
     }
 
     const startVertex = grid[start_vertex_row][start_vertex_col];
     const finishVertex = grid[finish_vertex_row][finish_vertex_col];
     const visitedInOrder = dijkstra(grid, startVertex, finishVertex);
-    const backtrackedVertices = backtrackRoute(finishVertex);
-    console.log("backtracked vertices: ", backtrackedVertices);
+    const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
     animateAlgorithm(visitedInOrder, backtrackedVertices);
   }
 
@@ -187,7 +250,8 @@ const PathfinderVisualizer = () => {
                     isWall,
                     distance,
                     isVisited,
-                    isPath
+                    isPath,
+                    draggable
                   } = vertex;
                   return (
                     <Vertex
@@ -198,11 +262,16 @@ const PathfinderVisualizer = () => {
                       onMouseDown={position => handleMouseDown(position)}
                       onMouseEnter={position => handleMouseEnter(position)}
                       onMouseUp={position => handleMouseUp(position)}
+                      onDragStart={e => handleDragStart(e, position, vertex)}
+                      onDragOver={handleDragOver}
+                      onDrop={event => handleDrop(event, position)}
+                      onDrag={handleDrag}
                       mouseIsPressed={mouseIsPressed}
                       isWall={isWall}
                       distance={distance}
                       isVisited={isVisited}
                       isPath={isPath}
+                      draggable={isStart || isFinish}
                     ></Vertex>
                   );
                 })}

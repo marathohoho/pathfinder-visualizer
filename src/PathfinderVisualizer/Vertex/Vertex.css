@@ -6,6 +6,15 @@
   display: inline-block;
   background: rgb(209, 241, 241);
 }
+
+.vertex-non-draggable {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
 .vertex:hover {
   outline: 1px solid rgb(255, 255, 255);
   /* background: white; */
@@ -17,6 +26,7 @@
 }
 .vertex-finish:hover {
   background-color: red;
+  cursor: grabbing;
 }
 
 .vertex-start {
@@ -24,7 +34,8 @@
 }
 
 .vertex-start:hover {
-  background-color: rgb(88, 88, 88);
+  background-color: green;
+  cursor: grabbing;
 }
 
 .vertex-wall {

@@ -12,18 +12,23 @@ const Vertex = props => {
     onMouseEnter,
     onMouseUp,
     isVisited,
-    isPath
+    isPath,
+    onDragStart,
+    onDragOver,
+    onDrop,
+    draggable
+    // onDrag
   } = props;
   const extraClassName = isFinish
     ? "vertex-finish"
     : isStart
     ? "vertex-start"
     : isWall
-    ? "vertex-wall"
+    ? "vertex-wall vertex-non-draggable"
     : isPath
-    ? "vertex-shortest-path"
+    ? "vertex-shortest-path vertex-non-draggable"
     : isVisited
-    ? "vertex-visited"
+    ? "vertex-visited vertex-non-draggable"
     : "";
 
   return (
@@ -33,7 +38,14 @@ const Vertex = props => {
       onMouseDown={() => onMouseDown(position)}
       onMouseEnter={() => onMouseEnter(position)}
       onMouseUp={() => onMouseUp(position)}
-    ></td>
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      draggable={draggable}
+      //   onDrag={() => onDrag(position)}
+    >
+      {isStart ? "s" : isFinish ? "f" : ""}
+    </td>
   );
 };
 
