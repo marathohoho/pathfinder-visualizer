@@ -59,8 +59,9 @@ const PathfinderVisualizer = () => {
 
     return;
   };
-  const handleDragOver = event => {
+  const handleDragOver = (event, position) => {
     event.preventDefault();
+    event.stopPropagation();
   };
 
   const handleDrop = (event, new_position) => {
@@ -160,6 +161,7 @@ const PathfinderVisualizer = () => {
     const finishVertex = grid[finish_vertex_row][finish_vertex_col];
     const visitedInOrder = dijkstra(grid, startVertex, finishVertex);
     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
+    console.log(grid);
     animateAlgorithm(visitedInOrder, backtrackedVertices);
   };
 
@@ -183,8 +185,8 @@ const PathfinderVisualizer = () => {
         </button>
       </div>
 
-      <table className="grid">
-        <tbody className="grid">
+      <table className="grid" draggable="false">
+        <tbody className="grid" draggable="false">
           {grid.map((row, row_index) => {
             return (
               <tr className="row" key={row_index}>
@@ -194,9 +196,9 @@ const PathfinderVisualizer = () => {
                     isFinish,
                     isStart,
                     isWall,
-                    distance,
                     isVisited,
-                    isPath
+                    isPath,
+                    distance
                   } = vertex;
                   return (
                     <Vertex
@@ -208,7 +210,7 @@ const PathfinderVisualizer = () => {
                       onMouseEnter={position => handleMouseEnter(position)}
                       onMouseUp={position => handleMouseUp(position)}
                       onDragStart={e => handleDragStart(e, position, vertex)}
-                      onDragOver={handleDragOver}
+                      onDragOver={event => handleDragOver(event, position)}
                       onDrop={event => handleDrop(event, position)}
                       onDrag={handleDrag}
                       mouseIsPressed={mouseIsPressed}
@@ -216,7 +218,7 @@ const PathfinderVisualizer = () => {
                       distance={distance}
                       isVisited={isVisited}
                       isPath={isPath}
-                      draggable={isStart || isFinish}
+                      draggable={(isStart || isFinish) && !isWall}
                     ></Vertex>
                   );
                 })}

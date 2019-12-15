@@ -6,7 +6,7 @@ import PathfinderVisualizer from "./PathfinderVisualizer/PathfinderVisualizer";
 function App() {
   return (
     <GridState>
-      <div className="App">
+      <div className="App" draggable="false">
         <h1>Pathfinder visualization</h1>
         <PathfinderVisualizer />
       </div>
