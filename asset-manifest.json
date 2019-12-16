@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/pathfinder-visualizer/static/css/main.9f4c340d.chunk.css",
-    "main.js": "/pathfinder-visualizer/static/js/main.597741b3.chunk.js",
-    "main.js.map": "/pathfinder-visualizer/static/js/main.597741b3.chunk.js.map",
+    "main.js": "/pathfinder-visualizer/static/js/main.b1112676.chunk.js",
+    "main.js.map": "/pathfinder-visualizer/static/js/main.b1112676.chunk.js.map",
     "runtime-main.js": "/pathfinder-visualizer/static/js/runtime-main.1960f19c.js",
     "runtime-main.js.map": "/pathfinder-visualizer/static/js/runtime-main.1960f19c.js.map",
-    "static/js/2.0544b1ef.chunk.js": "/pathfinder-visualizer/static/js/2.0544b1ef.chunk.js",
-    "static/js/2.0544b1ef.chunk.js.map": "/pathfinder-visualizer/static/js/2.0544b1ef.chunk.js.map",
+    "static/js/2.5a8c3b7d.chunk.js": "/pathfinder-visualizer/static/js/2.5a8c3b7d.chunk.js",
+    "static/js/2.5a8c3b7d.chunk.js.map": "/pathfinder-visualizer/static/js/2.5a8c3b7d.chunk.js.map",
     "index.html": "/pathfinder-visualizer/index.html",
-    "precache-manifest.37bbd9c39732fda3f4381e5e938c3925.js": "/pathfinder-visualizer/precache-manifest.37bbd9c39732fda3f4381e5e938c3925.js",
+    "precache-manifest.fbb7af5cfb1d56ab4885204d3671496d.js": "/pathfinder-visualizer/precache-manifest.fbb7af5cfb1d56ab4885204d3671496d.js",
     "service-worker.js": "/pathfinder-visualizer/service-worker.js",
     "static/css/main.9f4c340d.chunk.css.map": "/pathfinder-visualizer/static/css/main.9f4c340d.chunk.css.map",
-    "static/js/2.0544b1ef.chunk.js.LICENSE": "/pathfinder-visualizer/static/js/2.0544b1ef.chunk.js.LICENSE"
+    "static/js/2.5a8c3b7d.chunk.js.LICENSE": "/pathfinder-visualizer/static/js/2.5a8c3b7d.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.1960f19c.js",
-    "static/js/2.0544b1ef.chunk.js",
+    "static/js/2.5a8c3b7d.chunk.js",
     "static/css/main.9f4c340d.chunk.css",
-    "static/js/main.597741b3.chunk.js"
+    "static/js/main.b1112676.chunk.js"
   ]
 }
