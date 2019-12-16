@@ -1,10 +1,11 @@
 .vertex {
+  opacity: 0.75;
   width: 25px;
   height: 25px;
-  outline: 1px solid rgb(255, 255, 255);
+  outline: 1px solid rgba(255, 255, 255, 0.699);
   background: inherit;
   display: inline-block;
-  background: rgb(209, 241, 241);
+  background: #1c568d;
 }
 
 .vertex-non-draggable {
@@ -16,7 +17,7 @@
 }
 
 .vertex:hover {
-  outline: 1px solid rgb(255, 255, 255);
+  outline: 1px solid rgb(44, 44, 44);
   display: inline-block;
 }
 .vertex-finish {
@@ -37,7 +38,7 @@
 }
 
 .vertex-wall {
-  background-color: rgb(51, 51, 51);
+  background-color: rgb(0, 0, 0);
   animation-name: opacityOn;
   animation-duration: 0.2s;
   animation-timing-function: ease-out;

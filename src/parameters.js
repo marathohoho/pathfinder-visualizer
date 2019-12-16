@@ -1,5 +1,5 @@
-export const ROWS = 20;
-export const COLUMNS = window.innerWidth / 35;
+export const ROWS = 27;
+export const COLUMNS = window.innerWidth / 28;
 export const FAST = 10;
 export const MEDIUM = 40;
 export const SLOW = 80;

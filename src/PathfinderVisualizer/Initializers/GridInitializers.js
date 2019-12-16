@@ -26,6 +26,7 @@ const createVertex = (position, start_finish) => {
     isFinish:
       position.row === finish_vertex_row && position.col === finish_vertex_col,
     distance: Infinity,
+    distanceToGoal: Infinity,
     isVisited: false,
     isWall: false,
     isPath: false,
@@ -46,6 +47,7 @@ export const createGridWithWalls = (grid, position) => {
     isPath: false,
     isVisited: false,
     distance: Infinity,
+    distanceToGoal: Infinity,
     draggable: false,
     previousVertex: null
   };
@@ -64,6 +66,7 @@ export const swapVertices = (grid, vertex, new_position) => {
     isStart: false,
     isFinish: false,
     distance: Infinity,
+    distanceToGoal: Infinity,
     isVisited: false,
     isWall: false,
     isPath: false,
@@ -81,6 +84,7 @@ export const updateGrid = grid => {
     for (let col = 0; col < COLUMNS; col++) {
       //check the vertex
       grid[row][col].distance = Infinity;
+      grid[row][col].distanceToGoal = Infinity;
       grid[row][col].isPath = false;
       grid[row][col].isVisited = false;
       grid[row][col].previousVertex = null;

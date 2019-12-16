@@ -20,7 +20,9 @@ import {
   SET_TRANSLATE_ROW,
   SET_TRANSLATE_COL,
   SET_LAST_TRANSLATE_ROW,
-  SET_LAST_TRANSLATE_COL
+  SET_LAST_TRANSLATE_COL,
+  SET_DISTANCE_METHOD,
+  SET_ALLOW_DIAGONAL
 } from "../types.js";
 
 export default (state, action) => {
@@ -63,6 +65,18 @@ export default (state, action) => {
 
     case SET_LAST_TRANSLATE_COL:
       return { ...state, last_translate_col: action.payload };
+
+    case SET_DISTANCE_METHOD:
+      return {
+        ...state,
+        distanceMethod: action.payload
+      };
+
+    case SET_ALLOW_DIAGONAL:
+      return {
+        ...state,
+        allowDiagonal: action.payload
+      };
 
     default:
       return state;

@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from "react";
-
 import GridContext from "../context/grid/gridContext";
 import "./PathfinderVisualizer.css";
 import Vertex from "./Vertex/Vertex";
+import DistancePicker from "../Components/Methods";
 
 import {
   createInitialGrid,
@@ -10,7 +10,7 @@ import {
   swapVertices,
   updateGrid
 } from "./Initializers/GridInitializers";
-import { dijkstra, backtrackRoute } from "../algorithms/dijkstra";
+import { dijkstra, backtrackRoute, astar } from "../algorithms/dijkstra";
 import { resetGrid } from "../PathfinderVisualizer/Initializers/GridReset";
 import { animateAlgorithm } from "./Visualizers/Visualize";
 
@@ -29,7 +29,11 @@ const PathfinderVisualizer = () => {
     finish_vertex_col,
     mouseIsPressed,
     setStart,
-    setFinish
+    setFinish,
+    distanceMethod,
+    allowDiagonal,
+    setDistanceMethod,
+    setAllowDiagonal
   } = gridContext;
 
   const start_finish = {
@@ -138,6 +142,9 @@ const PathfinderVisualizer = () => {
   };
 
   const visualizeAlgorithm = () => {
+    // call the function to partially reset the grid
+    // keeping the walls and start/finish points
+
     document.getElementById("btnStart").disabled = true;
     document.getElementById("btnReset").disabled = true;
     for (let row = 0; row < ROWS; row++) {
@@ -159,10 +166,29 @@ const PathfinderVisualizer = () => {
     }
     const startVertex = grid[start_vertex_row][start_vertex_col];
     const finishVertex = grid[finish_vertex_row][finish_vertex_col];
-    const visitedInOrder = dijkstra(grid, startVertex, finishVertex);
+    console.log(distanceMethod);
+    const visitedInOrder = dijkstra(
+      grid,
+      startVertex,
+      finishVertex,
+      distanceMethod,
+      allowDiagonal
+    );
+
     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
-    console.log(grid);
     animateAlgorithm(visitedInOrder, backtrackedVertices);
+  };
+
+  const chooseDiagonalMethod = event => {
+    setAllowDiagonal(event);
+    setGrid(updateGrid(grid));
+    clearTheVisualOfVertex();
+  };
+
+  const chooseDistanceMethod = event => {
+    setGrid(updateGrid(grid));
+    clearTheVisualOfVertex();
+    setDistanceMethod(event);
   };
 
   return (
@@ -171,20 +197,23 @@ const PathfinderVisualizer = () => {
         {" "}
         <button
           id="btnStart"
-          className="start"
+          className="btn"
           onClick={() => visualizeAlgorithm()}
         >
           Start
         </button>
         <button
           id="btnReset"
-          className="reset"
+          className="btn"
           onClick={() => resetGrid(grid, setGrid, start_finish)}
         >
           Reset Grid
         </button>
       </div>
-
+      <DistancePicker
+        getDistanceMethod={chooseDistanceMethod}
+        chooseDiagonal={chooseDiagonalMethod}
+      />
       <table className="grid" draggable="false">
         <tbody className="grid" draggable="false">
           {grid.map((row, row_index) => {
