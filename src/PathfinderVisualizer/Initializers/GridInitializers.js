@@ -9,6 +9,9 @@ export const createInitialGrid = start_finish => {
     }
     grid.push(thisRow);
   }
+  for (let row = 0; row < 20; row++) {
+    grid[row][14].isWall = true;
+  }
   return grid;
 };
 
@@ -26,6 +29,8 @@ const createVertex = (position, start_finish) => {
     isFinish:
       position.row === finish_vertex_row && position.col === finish_vertex_col,
     distance: Infinity,
+    distanceToThis: 0,
+    heuristic: 0,
     isVisited: false,
     isWall: false,
     isPath: false,
@@ -40,18 +45,78 @@ const createVertex = (position, start_finish) => {
 export const createGridWithWalls = (grid, position) => {
   const wallGrid = [...grid];
   const vertex = wallGrid[position.row][position.col];
-  console.log("setting a new walled grid");
   const newVertex = {
     ...vertex,
     isWall: !vertex.isWall, //changed here
     isPath: false,
     isVisited: false,
     distance: Infinity,
+    distanceToThis: Infinity,
+    heuristic: Infinity,
     draggable: false,
     previousVertex: null
   };
   wallGrid[position.row][position.col] = newVertex;
   return wallGrid;
+};
+
+export const createGridWithWallsOnRowOrColumn = (
+  grid,
+  orientation,
+  start,
+  end,
+  division_point,
+  skip_this_cell
+) => {
+  const wallgrid = [...grid];
+  if (orientation === "vertical") {
+    for (let row = start; row < end; row++) {
+      if (
+        grid[row][division_point].isStart ||
+        grid[row][division_point].isFinish
+      )
+        continue;
+      if (row !== skip_this_cell) {
+        let vertex = wallgrid[row][division_point];
+        let newVertex = {
+          ...vertex,
+          isWall: !vertex.isWall, //changed here
+          isPath: false,
+          isVisited: false,
+          distance: Infinity,
+          distanceToThis: Infinity,
+          heuristic: Infinity,
+          draggable: false,
+          previousVertex: null
+        };
+        wallgrid[row][division_point] = newVertex;
+      }
+    }
+  } else {
+    for (let col = start; col < end; col++) {
+      if (
+        grid[division_point][col].isStart ||
+        grid[division_point][col].isFinish
+      )
+        continue;
+      if (col !== skip_this_cell) {
+        let vertex = wallgrid[division_point][col];
+        let newVertex = {
+          ...vertex,
+          isWall: !vertex.isWall, //changed here
+          isPath: false,
+          isVisited: false,
+          distance: Infinity,
+          distanceToThis: Infinity,
+          heuristic: Infinity,
+          draggable: false,
+          previousVertex: null
+        };
+        wallgrid[division_point][col] = newVertex;
+      }
+    }
+  }
+  return wallgrid;
 };
 
 //create a function for swapping a drid vertices
@@ -65,6 +130,8 @@ export const swapVertices = (grid, vertex, new_position) => {
     isStart: false,
     isFinish: false,
     distance: Infinity,
+    distanceToThis: 0,
+    heuristic: 0,
     isVisited: false,
     isWall: false,
     isPath: false,
@@ -82,6 +149,8 @@ export const updateGrid = grid => {
     for (let col = 0; col < COLUMNS; col++) {
       //check the vertex
       grid[row][col].distance = Infinity;
+      grid[row][col].distanceToThis = 0;
+      grid[row][col].heuristic = 0;
       grid[row][col].isPath = false;
       grid[row][col].isVisited = false;
       grid[row][col].previousVertex = null;

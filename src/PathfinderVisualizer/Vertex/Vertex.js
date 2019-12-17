@@ -16,8 +16,7 @@ const Vertex = props => {
     onDragStart,
     onDragOver,
     onDrop,
-    draggable
-    // onDrag
+    distance
   } = props;
   const extraClassName = isFinish
     ? "vertex-finish"
@@ -29,7 +28,7 @@ const Vertex = props => {
     ? "vertex-shortest-path vertex-non-draggable"
     : isVisited
     ? "vertex-visited vertex-non-draggable"
-    : "";
+    : "vertex-non-draggable";
 
   return (
     <td
@@ -41,10 +40,10 @@ const Vertex = props => {
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      draggable={draggable}
-      //   onDrag={() => onDrag(position)}
+      draggable={(isStart || isFinish) && !isWall}
     >
-      {isStart ? "s" : isFinish ? "f" : ""}
+      {/* {distance === Infinity ? "I" : distance} */}
+      {(position.row, position.col)}
     </td>
   );
 };

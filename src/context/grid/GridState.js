@@ -22,7 +22,10 @@ import {
   SET_TRANSLATE_ROW,
   SET_TRANSLATE_COL,
   SET_LAST_TRANSLATE_ROW,
-  SET_LAST_TRANSLATE_COL
+  SET_LAST_TRANSLATE_COL,
+  SET_DISTANCE_METHOD,
+  SET_ALLOW_DIAGONAL,
+  SET_ALGORITHM
 } from "../types.js";
 
 /**
@@ -54,7 +57,13 @@ const GridState = props => {
     translate_col: 0,
 
     last_translate_row: 0,
-    last_translate_col: 0
+    last_translate_col: 0,
+
+    distanceMethod: "manhattan",
+
+    allowDiagonal: false,
+
+    algorithm: "dijkstra"
   };
 
   const [state, dispatch] = useReducer(gridReducer, initialState);
@@ -97,6 +106,17 @@ const GridState = props => {
     dispatch({ type: SET_LAST_TRANSLATE_COL, payload: position.col });
   };
 
+  const setDistanceMethod = method => {
+    dispatch({ type: SET_DISTANCE_METHOD, payload: method });
+  };
+
+  const setAllowDiagonal = diagonal => {
+    dispatch({ type: SET_ALLOW_DIAGONAL, payload: diagonal });
+  };
+
+  const setAlgorithm = algorithm => {
+    dispatch({ type: SET_ALGORITHM, payload: algorithm });
+  };
   return (
     <gridContext.Provider
       value={{
@@ -120,7 +140,13 @@ const GridState = props => {
         translate_row: state.translate_row,
         translate_col: state.translate_col,
         last_translate_row: state.last_translate_row,
-        last_translate_col: state.last_translate_col
+        last_translate_col: state.last_translate_col,
+        setDistanceMethod,
+        distanceMethod: state.distanceMethod,
+        allowDiagonal: state.allowDiagonal,
+        setAllowDiagonal,
+        setAlgorithm,
+        algorithm: state.algorithm
       }}
     >
       {props.children}
