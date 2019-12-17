@@ -43,6 +43,7 @@ const Vertex = props => {
       draggable={(isStart || isFinish) && !isWall}
     >
       {/* {distance === Infinity ? "I" : distance} */}
+      {(position.row, position.col)}
     </td>
   );
 };

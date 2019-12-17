@@ -22,7 +22,8 @@ import {
   SET_LAST_TRANSLATE_ROW,
   SET_LAST_TRANSLATE_COL,
   SET_DISTANCE_METHOD,
-  SET_ALLOW_DIAGONAL
+  SET_ALLOW_DIAGONAL,
+  SET_ALGORITHM
 } from "../types.js";
 
 export default (state, action) => {
@@ -76,6 +77,12 @@ export default (state, action) => {
       return {
         ...state,
         allowDiagonal: action.payload
+      };
+
+    case SET_ALGORITHM:
+      return {
+        ...state,
+        algorithm: action.payload
       };
 
     default:

@@ -1,247 +1,256 @@
-function astar(
-  nodes,
-  start,
-  target,
-  nodesToAnimate,
-  boardArray,
-  name,
-  heuristic
-) {
-  if (!start || !target || start === target) {
-    return false;
-  }
-  nodes[start].distance = 0;
-  nodes[start].totalDistance = 0;
-  nodes[start].direction = "up";
-  let unvisitedNodes = Object.keys(nodes);
-  while (unvisitedNodes.length) {
-    let currentNode = closestNode(nodes, unvisitedNodes);
-    while (currentNode.status === "wall" && unvisitedNodes.length) {
-      currentNode = closestNode(nodes, unvisitedNodes);
-    }
-    if (currentNode.distance === Infinity) return false;
-    nodesToAnimate.push(currentNode);
-    currentNode.status = "visited";
-    if (currentNode.id === target) {
-      return "success!";
-    }
-    updateNeighbors(
-      nodes,
-      currentNode,
-      boardArray,
-      target,
-      name,
-      start,
-      heuristic
-    );
-  }
-}
+/**
+ *
+ * This performs the Dijkstra algorithm returning all vertices that were
+ * visited. Change the previousVertex value of the vertex to
+ * backtrack from the finish vertex to the start vertex
+ *
+ */
+export const astar = (grid, start, finish) => {
+  console.log("starting astar");
+  const visitedInOrder = [];
+  // assign start vertex distance 0
+  // by default the vertices are infinite distance away from the start
+  start.distance = 0;
+  // get all vertices
+  const unvisitedVertices = getAllVertices(grid);
+  while (unvisitedVertices.length !== 0) {
+    getTheClosestVerticesFirst(unvisitedVertices);
+    const closestVertex = unvisitedVertices.shift();
 
-function closestNode(nodes, unvisitedNodes) {
-  let currentClosest, index;
-  for (let i = 0; i < unvisitedNodes.length; i++) {
-    if (
-      !currentClosest ||
-      currentClosest.totalDistance > nodes[unvisitedNodes[i]].totalDistance
-    ) {
-      currentClosest = nodes[unvisitedNodes[i]];
-      index = i;
-    } else if (
-      currentClosest.totalDistance === nodes[unvisitedNodes[i]].totalDistance
-    ) {
-      if (
-        currentClosest.heuristicDistance >
-        nodes[unvisitedNodes[i]].heuristicDistance
-      ) {
-        currentClosest = nodes[unvisitedNodes[i]];
-        index = i;
+    if (closestVertex.isWall) continue;
+    if (closestVertex.distance === Infinity) return visitedInOrder;
+    updateUnvisitedNeighbors(closestVertex, grid, start, finish);
+    closestVertex.isVisited = true;
+    visitedInOrder.push(closestVertex);
+    // before was like this :
+    // updateUnvisitedNeighbors(closestVertex, grid);
+    if (closestVertex === finish) return visitedInOrder;
+  }
+};
+
+const getAllVertices = grid => {
+  const vertices = [];
+  for (const row of grid) for (const vertex of row) vertices.push(vertex);
+  return vertices;
+};
+
+// sort the vertices by ascending distance value
+// we can use PriorityQueue to improve on performance
+const getTheClosestVerticesFirst = unvisitedVertices => {
+  unvisitedVertices.sort(
+    (vertexA, vertexB) => vertexA.distance - vertexB.distance
+  );
+};
+
+const updateUnvisitedNeighbors = (vertex, grid, start, finish) => {
+  getUnvisitedNeighbors(vertex, grid, start, finish);
+};
+
+const getUnvisitedNeighbors = (vertex, grid, start, finish) => {
+  const { row, col } = vertex.position;
+
+  // Top
+  let t;
+  if (row - 1 >= 0) {
+    // Top Left
+    if (col - 1 > 0) {
+      t = grid[row - 1][col - 1];
+      let tempF =
+        vertex.distanceToThis +
+        distanceFromStartToThis(vertex, t) +
+        calculateHeuristic(t, finish);
+      if (!t.isWall && !t.isVisited) {
+        if (t.distance === Infinity || t.distance < tempF) {
+          t.distanceToThis =
+            vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+          t.heuristic = calculateHeuristic(t, finish);
+          t.distance = t.distanceToThis + t.heuristic;
+          t.previousVertex = vertex;
+        } else {
+          t.distance = tempF;
+        }
+      }
+    }
+    // Top Top
+    t = grid[row - 1][col];
+    let tempF =
+      vertex.distanceToThis +
+      distanceFromStartToThis(vertex, t) +
+      calculateHeuristic(t, finish);
+    if (!t.isWall && !t.isVisited) {
+      if (t.distance === Infinity || t.distance < tempF) {
+        t.distanceToThis =
+          vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+        t.heuristic = calculateHeuristic(t, finish);
+        t.distance = t.distanceToThis + t.heuristic;
+        t.previousVertex = vertex;
+      } else {
+        t.distance = tempF;
+      }
+    }
+
+    // Top Right
+    if (col + 1 < grid[0].length) {
+      t = grid[row - 1][col + 1];
+      let tempF =
+        vertex.distanceToThis +
+        distanceFromStartToThis(vertex, t) +
+        calculateHeuristic(t, finish);
+      if (!t.isWall && !t.isVisited) {
+        if (t.distance === Infinity || t.distance < tempF) {
+          t.distanceToThis =
+            vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+          t.heuristic = calculateHeuristic(t, finish);
+          t.distance = t.distanceToThis + t.heuristic;
+          t.previousVertex = vertex;
+        } else {
+          t.distance = tempF;
+        }
       }
     }
   }
-  unvisitedNodes.splice(index, 1);
-  return currentClosest;
-}
 
-function updateNeighbors(
-  nodes,
-  node,
-  boardArray,
-  target,
-  name,
-  start,
-  heuristic
-) {
-  let neighbors = getNeighbors(node.id, nodes, boardArray);
-  for (let neighbor of neighbors) {
-    if (target) {
-      updateNode(
-        node,
-        nodes[neighbor],
-        nodes[target],
-        name,
-        nodes,
-        nodes[start],
-        heuristic,
-        boardArray
-      );
-    } else {
-      updateNode(node, nodes[neighbor]);
+  // Right
+  if (col + 1 < grid[0].length) {
+    t = grid[row][col + 1];
+    let tempF =
+      vertex.distanceToThis +
+      distanceFromStartToThis(vertex, t) +
+      calculateHeuristic(t, finish);
+    if (!t.isWall && !t.isVisited) {
+      if (t.distance === Infinity || t.distance < tempF) {
+        t.distanceToThis =
+          vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+        t.heuristic = calculateHeuristic(t, finish);
+        t.distance = t.distanceToThis + t.heuristic;
+        t.previousVertex = vertex;
+      } else {
+        t.distance = tempF;
+      }
     }
   }
-}
 
-function updateNode(
-  currentNode,
-  targetNode,
-  actualTargetNode,
-  name,
-  nodes,
-  actualStartNode,
-  heuristic,
-  boardArray
-) {
-  let distance = getDistance(currentNode, targetNode);
-  if (!targetNode.heuristicDistance)
-    targetNode.heuristicDistance = manhattanDistance(
-      targetNode,
-      actualTargetNode
-    );
-  let distanceToCompare =
-    currentNode.distance + targetNode.weight + distance[0];
-  if (distanceToCompare < targetNode.distance) {
-    targetNode.distance = distanceToCompare;
-    targetNode.totalDistance =
-      targetNode.distance + targetNode.heuristicDistance;
-    targetNode.previousNode = currentNode.id;
-    targetNode.path = distance[1];
-    targetNode.direction = distance[2];
-  }
-}
-
-function getNeighbors(id, nodes, boardArray) {
-  let coordinates = id.split("-");
-  let x = parseInt(coordinates[0]);
-  let y = parseInt(coordinates[1]);
-  let neighbors = [];
-  let potentialNeighbor;
-  if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`;
-    if (nodes[potentialNeighbor].status !== "wall")
-      neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`;
-    if (nodes[potentialNeighbor].status !== "wall")
-      neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`;
-    if (nodes[potentialNeighbor].status !== "wall")
-      neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`;
-    if (nodes[potentialNeighbor].status !== "wall")
-      neighbors.push(potentialNeighbor);
-  }
-  return neighbors;
-}
-
-function getDistance(nodeOne, nodeTwo) {
-  let currentCoordinates = nodeOne.id.split("-");
-  let targetCoordinates = nodeTwo.id.split("-");
-  let x1 = parseInt(currentCoordinates[0]);
-  let y1 = parseInt(currentCoordinates[1]);
-  let x2 = parseInt(targetCoordinates[0]);
-  let y2 = parseInt(targetCoordinates[1]);
-  if (x2 < x1 && y1 === y2) {
-    if (nodeOne.direction === "up") {
-      return [1, ["f"], "up"];
-    } else if (nodeOne.direction === "right") {
-      return [2, ["l", "f"], "up"];
-    } else if (nodeOne.direction === "left") {
-      return [2, ["r", "f"], "up"];
-    } else if (nodeOne.direction === "down") {
-      return [3, ["r", "r", "f"], "up"];
-    } else if (nodeOne.direction === "up-right") {
-      return [1.5, null, "up"];
-    } else if (nodeOne.direction === "down-right") {
-      return [2.5, null, "up"];
-    } else if (nodeOne.direction === "up-left") {
-      return [1.5, null, "up"];
-    } else if (nodeOne.direction === "down-left") {
-      return [2.5, null, "up"];
+  // Down
+  if (row + 1 < grid.length) {
+    // Down Right
+    if (col + 1 < grid[0].length) {
+      t = grid[row + 1][col + 1];
+      let tempF =
+        vertex.distanceToThis +
+        distanceFromStartToThis(vertex, t) +
+        calculateHeuristic(t, finish);
+      if (!t.isWall && !t.isVisited) {
+        if (t.distance === Infinity || t.distance < tempF) {
+          t.distanceToThis =
+            vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+          t.heuristic = calculateHeuristic(t, finish);
+          t.distance = t.distanceToThis + t.heuristic;
+          t.previousVertex = vertex;
+        } else {
+          t.distance = tempF;
+        }
+      }
     }
-  } else if (x2 > x1 && y1 === y2) {
-    if (nodeOne.direction === "up") {
-      return [3, ["r", "r", "f"], "down"];
-    } else if (nodeOne.direction === "right") {
-      return [2, ["r", "f"], "down"];
-    } else if (nodeOne.direction === "left") {
-      return [2, ["l", "f"], "down"];
-    } else if (nodeOne.direction === "down") {
-      return [1, ["f"], "down"];
-    } else if (nodeOne.direction === "up-right") {
-      return [2.5, null, "down"];
-    } else if (nodeOne.direction === "down-right") {
-      return [1.5, null, "down"];
-    } else if (nodeOne.direction === "up-left") {
-      return [2.5, null, "down"];
-    } else if (nodeOne.direction === "down-left") {
-      return [1.5, null, "down"];
+    // Down Down
+    t = grid[row + 1][col];
+    let tempF =
+      vertex.distanceToThis +
+      distanceFromStartToThis(vertex, t) +
+      calculateHeuristic(t, finish);
+    if (!t.isWall && !t.isVisited) {
+      if (t.distance === Infinity || t.distance < tempF) {
+        t.distanceToThis =
+          vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+        t.heuristic = calculateHeuristic(t, finish);
+        t.distance = t.distanceToThis + t.heuristic;
+        t.previousVertex = vertex;
+      } else {
+        t.distance = tempF;
+      }
+    }
+
+    // Down Left
+    if (col - 1 >= 0) {
+      t = grid[row + 1][col - 1];
+      let tempF =
+        vertex.distanceToThis +
+        distanceFromStartToThis(vertex, t) +
+        calculateHeuristic(t, finish);
+      if (!t.isWall && !t.isVisited) {
+        if (t.distance === Infinity || t.distance < tempF) {
+          t.distanceToThis =
+            vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+          t.heuristic = calculateHeuristic(t, finish);
+          t.distance = t.distanceToThis + t.heuristic;
+          t.previousVertex = vertex;
+        } else {
+          t.distance = tempF;
+        }
+      }
     }
   }
-  if (y2 < y1 && x1 === x2) {
-    if (nodeOne.direction === "up") {
-      return [2, ["l", "f"], "left"];
-    } else if (nodeOne.direction === "right") {
-      return [3, ["l", "l", "f"], "left"];
-    } else if (nodeOne.direction === "left") {
-      return [1, ["f"], "left"];
-    } else if (nodeOne.direction === "down") {
-      return [2, ["r", "f"], "left"];
-    } else if (nodeOne.direction === "up-right") {
-      return [2.5, null, "left"];
-    } else if (nodeOne.direction === "down-right") {
-      return [2.5, null, "left"];
-    } else if (nodeOne.direction === "up-left") {
-      return [1.5, null, "left"];
-    } else if (nodeOne.direction === "down-left") {
-      return [1.5, null, "left"];
-    }
-  } else if (y2 > y1 && x1 === x2) {
-    if (nodeOne.direction === "up") {
-      return [2, ["r", "f"], "right"];
-    } else if (nodeOne.direction === "right") {
-      return [1, ["f"], "right"];
-    } else if (nodeOne.direction === "left") {
-      return [3, ["r", "r", "f"], "right"];
-    } else if (nodeOne.direction === "down") {
-      return [2, ["l", "f"], "right"];
-    } else if (nodeOne.direction === "up-right") {
-      return [1.5, null, "right"];
-    } else if (nodeOne.direction === "down-right") {
-      return [1.5, null, "right"];
-    } else if (nodeOne.direction === "up-left") {
-      return [2.5, null, "right"];
-    } else if (nodeOne.direction === "down-left") {
-      return [2.5, null, "right"];
+  // Left
+  if (col - 1 > 0) {
+    t = grid[row][col - 1];
+    let tempF =
+      vertex.distanceToThis +
+      distanceFromStartToThis(vertex, t) +
+      calculateHeuristic(t, finish);
+    if (!t.isWall && !t.isVisited) {
+      if (t.distance === Infinity || t.distance < tempF) {
+        t.distanceToThis =
+          vertex.distanceToThis + distanceFromStartToThis(t, vertex);
+        t.heuristic = calculateHeuristic(t, finish);
+        t.distance = t.distanceToThis + t.heuristic;
+        t.previousVertex = vertex;
+      } else {
+        t.distance = tempF;
+      }
     }
   }
+};
+
+export const backtrackRoute = (finish, start) => {
+  const backtrackedVertices = [];
+  let currentVertex = finish;
+  //   currentVertex = currentVertex.previousVertex;
+  if (currentVertex === null) return backtrackedVertices;
+  while (currentVertex !== start) {
+    currentVertex.isPath = true;
+    backtrackedVertices.unshift(currentVertex);
+    currentVertex = currentVertex.previousVertex;
+  }
+  return backtrackedVertices;
+};
+
+const calculateHeuristic = (from, to) =>
+  EuclideanDistance(from.position, to.position);
+
+const distanceFromStartToThis = (from, to) => {
+  return EuclideanDistance(from.position, to.position);
+};
+
+// function ManhattanDistance(Point, Goal) {
+//   // linear movement - no diagonals - just cardinal directions (NSEW)
+//   return Math.abs(Point.row - Goal.row) + Math.abs(Point.col - Goal.col);
+// }
+
+// function DiagonalDistance(Point, Goal) {
+//   // diagonal movement - assumes diag dist is 1, same as cardinals
+//   return Math.max(
+//     Math.abs(Point.row - Goal.row),
+//     Math.abs(Point.col - Goal.col)
+//   );
+// }
+
+function EuclideanDistance(Point, Goal) {
+  return Math.sqrt(
+    Math.pow(Point.row - Goal.row, 2) + Math.pow(Point.col - Goal.col, 2)
+  );
 }
 
-function manhattanDistance(nodeOne, nodeTwo) {
-  let nodeOneCoordinates = nodeOne.id.split("-").map(ele => parseInt(ele));
-  let nodeTwoCoordinates = nodeTwo.id.split("-").map(ele => parseInt(ele));
-  let xOne = nodeOneCoordinates[0];
-  let xTwo = nodeTwoCoordinates[0];
-  let yOne = nodeOneCoordinates[1];
-  let yTwo = nodeTwoCoordinates[1];
-
-  let xChange = Math.abs(xOne - xTwo);
-  let yChange = Math.abs(yOne - yTwo);
-
-  return xChange + yChange;
-}
-
-module.exports = astar;
+/**
+ *
+ * Use onlu one Heuristic approach for solving the Astart algorithm
+ * USE EUCLIDEAN DISTANCE HEURISTICS
+ */

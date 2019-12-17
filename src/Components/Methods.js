@@ -6,13 +6,19 @@ import FormGroup from "@material-ui/core/FormGroup";
 
 import GridContext from "../context/grid/gridContext";
 
-const DistancePicker = ({ getDistanceMethod, chooseDiagonal }) => {
+const DistancePicker = ({
+  getDistanceMethod,
+  chooseDiagonal,
+  getWhichAlgorithm
+}) => {
   const gridContext = React.useContext(GridContext);
   const {
     allowDiagonal,
     distanceMethod,
     setAllowDiagonal,
-    setDistanceMethod
+    setDistanceMethod,
+    setAlgorithm,
+    algorithm
   } = gridContext;
 
   const handleDistanceMethod = event => {
@@ -25,8 +31,40 @@ const DistancePicker = ({ getDistanceMethod, chooseDiagonal }) => {
     chooseDiagonal(event.target.checked);
   };
 
+  const handleAlgorithMethod = event => {
+    setAlgorithm(event.target.value);
+    getWhichAlgorithm(event.target.value);
+  };
+
   return (
     <div style={{ display: "block", marginTop: "10px", textAlign: "center" }}>
+      <FormGroup row style={{ textAlign: "center", display: "block" }}>
+        <FormControlLabel
+          control={
+            <Radio
+              checked={algorithm === "dijkstra"}
+              onChange={handleAlgorithMethod}
+              value="dijkstra"
+              name="choose-distance-method"
+              label="dijkstra"
+            />
+          }
+          label="Dijkstra"
+        />
+        <FormControlLabel
+          control={
+            <Radio
+              checked={algorithm === "astar"}
+              onChange={handleAlgorithMethod}
+              value="astar"
+              name="choose-distance-method"
+              label="astar"
+            />
+          }
+          label="A-star"
+        />
+      </FormGroup>
+
       <FormGroup row style={{ textAlign: "center", display: "block" }}>
         <FormControlLabel
           control={
@@ -36,6 +74,7 @@ const DistancePicker = ({ getDistanceMethod, chooseDiagonal }) => {
               value="manhattan"
               name="choose-distance-method"
               label="m"
+              disabled={algorithm === "astar" || !allowDiagonal}
             />
           }
           label="manhattan"
@@ -48,6 +87,7 @@ const DistancePicker = ({ getDistanceMethod, chooseDiagonal }) => {
               value="chebyshev"
               name="choose-distance-method"
               label="c"
+              disabled={algorithm === "astar" || !allowDiagonal}
             />
           }
           label="chebyshev"
@@ -60,13 +100,18 @@ const DistancePicker = ({ getDistanceMethod, chooseDiagonal }) => {
               value="euclidean"
               name="choose-distance-method"
               label="e"
+              disabled={algorithm === "astar" || !allowDiagonal}
             />
           }
           label="euclidean"
         />
         <FormControlLabel
           control={
-            <Checkbox checked={allowDiagonal} onChange={handleDiagonal} />
+            <Checkbox
+              checked={allowDiagonal}
+              onChange={handleDiagonal}
+              disabled={algorithm === "astar"}
+            />
           }
           label="diagonal"
         />

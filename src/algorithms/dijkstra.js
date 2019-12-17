@@ -187,9 +187,7 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       }
     }
   } else {
-    //   adjust this logic
-    // give the user an option of travelling diagonally or not
-    // this is not the diagonal move
+    //  non diagonal movements only
     if (
       row > 0 &&
       !grid[row - 1][col].isVisited &&
@@ -228,7 +226,7 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
 export const backtrackRoute = (finish, start) => {
   const backtrackedVertices = [];
   let currentVertex = finish;
-  //   currentVertex = currentVertex.previousVertex;
+  currentVertex = currentVertex.previousVertex;
   if (currentVertex === null) return backtrackedVertices;
   while (currentVertex !== start) {
     currentVertex.isPath = true;
