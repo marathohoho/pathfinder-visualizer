@@ -28,15 +28,6 @@ import {
   SET_ALGORITHM
 } from "../types.js";
 
-/**
- * Need to update :
- * 1. Start/Finish
- * 2. Grid
- * 3. Grid with walls
- * 4. mouseIsPressed
- * 5. isDragging
- *
- */
 const GridState = props => {
   const initialState = {
     grid: [],

@@ -10,11 +10,7 @@ import {
   swapVertices,
   updateGrid
 } from "./Initializers/GridInitializers";
-import { dijkstra, backtrackRoute } from "../algorithms/dijkstra";
-import { astar } from "../algorithms/astar";
-import { resetGrid } from "../PathfinderVisualizer/Initializers/GridReset";
-import { animateAlgorithm } from "./Visualizers/Visualize";
-import { mazeGenerator } from "../utilities/MazeGenerator";
+
 import { ROWS, COLUMNS } from "../parameters";
 
 const PathfinderVisualizer = () => {
@@ -90,7 +86,6 @@ const PathfinderVisualizer = () => {
     }
     setGrid(swapVertices(grid, vertex, new_position));
     setGrid(updateGrid(grid));
-    clearTheVisualOfVertex();
     event.dataTransfer.clearData();
   };
 
@@ -126,7 +121,6 @@ const PathfinderVisualizer = () => {
       setGrid(wallGrid);
       updateGrid(wallGrid);
       setMouseIsPressed(true);
-      clearTheVisualOfVertex();
     }
   };
 
@@ -137,52 +131,71 @@ const PathfinderVisualizer = () => {
       const wallGrid = createGridWithWalls(grid, position);
       setGrid(wallGrid);
       updateGrid(wallGrid);
-      clearTheVisualOfVertex();
     }
   };
   const handleMouseUp = position => {
     setMouseIsPressed(false);
   };
 
-  const visualizeAlgorithm = () => {
-    document.getElementById("btnStart").disabled = true;
-    document.getElementById("btnReset").disabled = true;
-    for (let row = 0; row < ROWS; row++) {
-      for (let col = 0; col < COLUMNS; col++) {
-        let thisVertex = grid[row][col];
+  //   const visualizeAlgorithm = () => {
+  //     clearTheVisualOfVertex();
+  //     document.getElementById("root").style = "pointer-events: none";
+  //     document.getElementById("btnStart").disabled = true;
+  //     document.getElementById("btnReset").disabled = true;
+  //     for (let row = 0; row < ROWS; row++) {
+  //       for (let col = 0; col < COLUMNS; col++) {
+  //         let thisVertex = grid[row][col];
 
-        if (thisVertex.isStart)
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-start";
-        else if (thisVertex.isFinish)
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-finish";
-        else if (thisVertex.isWall)
-          document.getElementById(`vertex-${row}-${col}`).className =
-            "vertex vertex-wall";
-        else if (thisVertex.isVisited)
-          document.getElementById(`vertex-${row}-${col}`).className = "vertex";
-      }
-    }
-    const startVertex = grid[start_vertex_row][start_vertex_col];
-    const finishVertex = grid[finish_vertex_row][finish_vertex_col];
-    let visitedInOrder;
-    if (algorithm === "astar") {
-      visitedInOrder = astar(grid, startVertex, finishVertex);
-    } else {
-      visitedInOrder = dijkstra(
-        grid,
-        startVertex,
-        finishVertex,
-        distanceMethod,
-        allowDiagonal
-      );
-      console.log(grid);
-    }
-    console.log(visitedInOrder);
-    const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
-    animateAlgorithm(visitedInOrder, backtrackedVertices);
-  };
+  //         if (thisVertex.isStart)
+  //           document.getElementById(`vertex-${row}-${col}`).className =
+  //             "vertex vertex-start";
+  //         else if (thisVertex.isFinish)
+  //           document.getElementById(`vertex-${row}-${col}`).className =
+  //             "vertex vertex-finish";
+  //         else if (thisVertex.isWall)
+  //           document.getElementById(`vertex-${row}-${col}`).className =
+  //             "vertex vertex-wall";
+  //         else if (thisVertex.isVisited)
+  //           document.getElementById(`vertex-${row}-${col}`).className = "vertex";
+  //       }
+  //     }
+  //     const startVertex = grid[start_vertex_row][start_vertex_col];
+  //     const finishVertex = grid[finish_vertex_row][finish_vertex_col];
+  //     let visitedInOrder;
+
+  //     switch (algorithm) {
+  //       case "astar":
+  //         visitedInOrder = astar(grid, startVertex, finishVertex);
+  //         break;
+  //       case "dijkstra":
+  //         visitedInOrder = dijkstra(
+  //           grid,
+  //           startVertex,
+  //           finishVertex,
+  //           distanceMethod,
+  //           allowDiagonal
+  //         );
+  //         break;
+  //       case "dfs":
+  //         visitedInOrder = bfs_dfs(grid, startVertex, finishVertex, "dfs");
+  //         break;
+  //       case "bfs":
+  //         visitedInOrder = bfs_dfs(grid, startVertex, finishVertex, "bfs");
+  //         break;
+  //       default:
+  //         visitedInOrder = dijkstra(
+  //           grid,
+  //           startVertex,
+  //           finishVertex,
+  //           distanceMethod,
+  //           allowDiagonal
+  //         );
+  //     }
+  //     // console.log(grid);
+  //     // console.log(visitedInOrder);
+  //     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
+  //     animateAlgorithm(visitedInOrder, backtrackedVertices);
+  //   };
 
   const chooseDiagonalMethod = event => {
     setAllowDiagonal(event);
@@ -201,32 +214,12 @@ const PathfinderVisualizer = () => {
     setAlgorithm(event);
   };
 
-  const createMaze = () => {
-    setGrid(mazeGenerator(grid));
-    updateGrid(grid);
-  };
+  //   const createMaze = () => {
+  //     setGrid(mazeGenerator(grid));
+  //     updateGrid(grid);
+  //   };
   return (
-    <>
-      <div>
-        {" "}
-        <button
-          id="btnStart"
-          className="btn"
-          onClick={() => visualizeAlgorithm()}
-        >
-          Start
-        </button>
-        <button
-          id="btnReset"
-          className="btn"
-          onClick={() => resetGrid(grid, setGrid, start_finish)}
-        >
-          Reset Grid
-        </button>
-        <button id="btnMaze" className="btn" onClick={() => createMaze()}>
-          Create Maze
-        </button>
-      </div>
+    <div>
       <DistancePicker
         getWhichAlgorithm={chooseAlgorithm}
         getDistanceMethod={chooseDistanceMethod}
@@ -274,7 +267,7 @@ const PathfinderVisualizer = () => {
           })}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 
