@@ -37,7 +37,7 @@ const DistancePicker = ({
   };
 
   return (
-    <div style={{ display: "block", marginTop: "10px", textAlign: "center" }}>
+    <div style={{ display: "block", marginTop: "130px", textAlign: "center" }}>
       <FormGroup row style={{ textAlign: "center", display: "block" }}>
         <FormControlLabel
           control={

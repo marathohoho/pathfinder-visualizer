@@ -21,7 +21,7 @@ export const dijkstra = (
   while (unvisitedVertices.length !== 0) {
     getTheClosestVerticesFirst(unvisitedVertices);
     const closestVertex = unvisitedVertices.shift();
-
+    console.log("distance of closest vertex is: ", closestVertex.distance);
     if (closestVertex.isWall) continue;
     if (closestVertex.distance === Infinity) return visitedInOrder;
     updateUnvisitedNeighbors(

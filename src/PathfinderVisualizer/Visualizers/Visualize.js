@@ -9,6 +9,7 @@ export const animateShortestPath = backtrackRoute => {
   }
   document.getElementById("btnStart").disabled = false;
   document.getElementById("btnReset").disabled = false;
+  document.getElementById("root").style = "pointer-events: initial";
 };
 
 export const animateAlgorithm = (visitedInOrder, backtrackedVertices) => {
