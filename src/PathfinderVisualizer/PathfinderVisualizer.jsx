@@ -14,8 +14,8 @@ import { dijkstra, backtrackRoute } from "../algorithms/dijkstra";
 import { astar } from "../algorithms/astar";
 import { resetGrid } from "../PathfinderVisualizer/Initializers/GridReset";
 import { animateAlgorithm } from "./Visualizers/Visualize";
-import { mazeGenerator } from "../utilities/MazeGenerator";
 import { ROWS, COLUMNS } from "../parameters";
+import { bfs_dfs } from "../algorithms/bfs_dfs";
 
 const PathfinderVisualizer = () => {
   const gridContext = useContext(GridContext);
@@ -167,18 +167,35 @@ const PathfinderVisualizer = () => {
     const startVertex = grid[start_vertex_row][start_vertex_col];
     const finishVertex = grid[finish_vertex_row][finish_vertex_col];
     let visitedInOrder;
-    if (algorithm === "astar") {
-      visitedInOrder = astar(grid, startVertex, finishVertex);
-    } else {
-      visitedInOrder = dijkstra(
-        grid,
-        startVertex,
-        finishVertex,
-        distanceMethod,
-        allowDiagonal
-      );
-      console.log(grid);
+    switch (algorithm) {
+      case "astar":
+        visitedInOrder = astar(grid, startVertex, finishVertex);
+        break;
+      case "dijkstra":
+        visitedInOrder = dijkstra(
+          grid,
+          startVertex,
+          finishVertex,
+          distanceMethod,
+          allowDiagonal
+        );
+        break;
+      case "dfs":
+        visitedInOrder = bfs_dfs(grid, startVertex, finishVertex, "dfs");
+        break;
+      case "bfs":
+        visitedInOrder = bfs_dfs(grid, startVertex, finishVertex, "bfs");
+        break;
+      default:
+        visitedInOrder = dijkstra(
+          grid,
+          startVertex,
+          finishVertex,
+          distanceMethod,
+          allowDiagonal
+        );
     }
+    console.log(grid);
     console.log(visitedInOrder);
     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
     animateAlgorithm(visitedInOrder, backtrackedVertices);
@@ -201,10 +218,10 @@ const PathfinderVisualizer = () => {
     setAlgorithm(event);
   };
 
-  const createMaze = () => {
-    setGrid(mazeGenerator(grid));
-    updateGrid(grid);
-  };
+  //   const createMaze = () => {
+  //     setGrid(mazeGenerator(grid));
+  //     updateGrid(grid);
+  //   };
   return (
     <>
       <div>
@@ -222,9 +239,6 @@ const PathfinderVisualizer = () => {
           onClick={() => resetGrid(grid, setGrid, start_finish)}
         >
           Reset Grid
-        </button>
-        <button id="btnMaze" className="btn" onClick={() => createMaze()}>
-          Create Maze
         </button>
       </div>
       <DistancePicker

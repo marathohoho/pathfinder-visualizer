@@ -31,7 +31,7 @@ const DistancePicker = ({
     chooseDiagonal(event.target.checked);
   };
 
-  const handleAlgorithMethod = event => {
+  const handleAlgorithmMethod = event => {
     setAlgorithm(event.target.value);
     getWhichAlgorithm(event.target.value);
   };
@@ -43,7 +43,7 @@ const DistancePicker = ({
           control={
             <Radio
               checked={algorithm === "dijkstra"}
-              onChange={handleAlgorithMethod}
+              onChange={handleAlgorithmMethod}
               value="dijkstra"
               name="choose-distance-method"
               label="dijkstra"
@@ -55,13 +55,37 @@ const DistancePicker = ({
           control={
             <Radio
               checked={algorithm === "astar"}
-              onChange={handleAlgorithMethod}
+              onChange={handleAlgorithmMethod}
               value="astar"
               name="choose-distance-method"
               label="astar"
             />
           }
           label="A-star"
+        />
+        <FormControlLabel
+          control={
+            <Radio
+              checked={algorithm === "bfs"}
+              onChange={handleAlgorithmMethod}
+              value="bfs"
+              name="choose-distance-method"
+              label="bfs"
+            />
+          }
+          label="Breadth-First Search"
+        />
+        <FormControlLabel
+          control={
+            <Radio
+              checked={algorithm === "dfs"}
+              onChange={handleAlgorithmMethod}
+              value="dfs"
+              name="choose-distance-method"
+              label="dfs"
+            />
+          }
+          label="Depth-First Search"
         />
       </FormGroup>
 

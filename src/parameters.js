@@ -1,4 +1,4 @@
-export const ROWS = 26;
+export const ROWS = 25;
 export const COLUMNS = Math.floor(window.innerWidth / 28);
 export const FAST = 10;
 export const MEDIUM = 40;

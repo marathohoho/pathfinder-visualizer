@@ -68,6 +68,9 @@ export const createGridWithWallsOnRowOrColumn = (
   division_point,
   skip_this_cell
 ) => {
+  console.log(
+    `Orientation is: ${orientation} Division point is ${division_point}, skipping the cell ${skip_this_cell}, `
+  );
   const wallgrid = [...grid];
   if (orientation === "vertical") {
     for (let row = start; row < end; row++) {
