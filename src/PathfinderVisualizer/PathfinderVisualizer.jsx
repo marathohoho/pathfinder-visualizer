@@ -167,6 +167,7 @@ const PathfinderVisualizer = () => {
     const startVertex = grid[start_vertex_row][start_vertex_col];
     const finishVertex = grid[finish_vertex_row][finish_vertex_col];
     let visitedInOrder;
+
     switch (algorithm) {
       case "astar":
         visitedInOrder = astar(grid, startVertex, finishVertex);
@@ -195,8 +196,8 @@ const PathfinderVisualizer = () => {
           allowDiagonal
         );
     }
-    console.log(grid);
-    console.log(visitedInOrder);
+    // console.log(grid);
+    // console.log(visitedInOrder);
     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
     animateAlgorithm(visitedInOrder, backtrackedVertices);
   };

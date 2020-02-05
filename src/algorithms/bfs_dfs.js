@@ -1,8 +1,10 @@
 export const bfs_dfs = (grid, start, finish, algorithm) => {
   if (!start || !finish || start === finish) return [];
   let visitedInOrder = [];
-
-  let structure = [start];
+  console.log(start);
+  let structure = [];
+  structure.push(start);
+  console.log(structure);
   let currentVertex;
   let neighbors = [];
 
@@ -25,25 +27,24 @@ export const bfs_dfs = (grid, start, finish, algorithm) => {
       });
     }
   } else {
-    // let i = 4;
     while (structure.length) {
-      console.log(`Structure is : `, structure);
       currentVertex = structure.shift();
-      console.log("i am doing bfs");
-
+      //   if (!currentVertex.isVisited) {
       currentVertex.isVisited = true;
       if (currentVertex === finish) return visitedInOrder;
       neighbors = getNeighbors(grid, currentVertex);
-
       visitedInOrder.push(currentVertex);
-      console.log(`Neighbors lsit is :`, neighbors);
-
       neighbors.forEach(neighbor => {
-        if (!neighbor.isVisited) {
+        if (neighbor.isVisited === false) {
           neighbor.previousVertex = currentVertex;
+          console.log("pushed neighbor is", neighbor);
           structure.push(neighbor);
+          neighbor.isVisited = true;
+        } else {
+          console.log("neighbor is visited");
         }
       });
+      //   }
     }
   }
   return visitedInOrder;

@@ -161,7 +161,3 @@ export const updateGrid = grid => {
   }
   return grid;
 };
-
-// need to handle move of the finish vertex
-// implement live update of the shortest path when either end or start
-// debug the walls placed after the move was done
