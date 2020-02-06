@@ -3,7 +3,7 @@ import Radio from "@material-ui/core/Radio";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
-
+import "./navbar.scss";
 import GridContext from "../context/grid/gridContext";
 
 const DistancePicker = ({
@@ -37,7 +37,7 @@ const DistancePicker = ({
   };
 
   return (
-    <div style={{ display: "block", marginTop: "130px", textAlign: "center" }}>
+    <div className="algo-methods">
       <FormGroup row style={{ textAlign: "center", display: "block" }}>
         <FormControlLabel
           control={

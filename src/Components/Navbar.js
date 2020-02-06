@@ -110,35 +110,46 @@ function Navbar() {
     // console.log(grid);
     // console.log(visitedInOrder);
     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
-    animateAlgorithm(visitedInOrder, backtrackedVertices);
+    animateAlgorithm(
+      { start_vertex_row, start_vertex_col },
+      visitedInOrder,
+      backtrackedVertices
+    );
   };
 
+  const openTutorialCard = () => {
+    document.getElementById("card").style.display = "block";
+  };
   return (
     <div className="container">
       <h2>Pathfinder Algorithms Visualization</h2>
 
       <nav className="main-nav">
-        <div className="algorithms-methods">
+        {/* <div className="algorithms-methods">
           <h1>something</h1>
-        </div>
+        </div> */}
         <div className="buttons">
-          <div>
-            {" "}
-            <button
-              id="btnStart"
-              className="btn"
-              onClick={() => visualizeAlgorithm()}
-            >
-              Start
-            </button>
-            <button
-              id="btnReset"
-              className="btn"
-              onClick={() => resetGrid(grid, setGrid, start_finish)}
-            >
-              Reset Grid
-            </button>
-          </div>
+          <button
+            id="btnStart"
+            className="brk-btn"
+            onClick={() => visualizeAlgorithm()}
+          >
+            Start
+          </button>
+          <button
+            id="btnReset"
+            className="brk-btn"
+            onClick={() => resetGrid(grid, setGrid, start_finish)}
+          >
+            Reset Grid
+          </button>
+          <button
+            id="btnReset"
+            className="brk-btn"
+            onClick={() => openTutorialCard()}
+          >
+            Help
+          </button>
         </div>
       </nav>
     </div>

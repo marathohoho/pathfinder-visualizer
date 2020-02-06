@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css?family=Ubuntu:400,500&display=swap");
+
+$navbar_background: #12375a;
+$navbar_background_dark: #071421;
+$button_background: #ffef47;
+$text_color: #87edff;
+$text_color2: #ff8266;
+$app_font: "Ubuntu", sans-serif;
+
+html,
+body {
+  height: 100%;
+  /* overflow-x: hidden; */
+  width: 100%;
+}
+.App {
+  background-size: cover;
+  width: 100%;
+  overflow-x: hidden;
+}
+.grid {
+  text-align: center;
+  align-content: center;
+}
+
+// .card-container {
+//   //   background-color: rgba(0, 0, 0, 0.5);
+//   display: block;
+//   position: absolute;
+//   z-index: 10 !important;
+//   width: 100%;
+//   height: 100%;
+// }
+.card {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+  font-family: $app_font;
+  color: $button_background;
+  background-color: $navbar_background_dark;
+  width: 50%;
+  border: 5px;
+  border-radius: 10px;
+  position: fixed;
+  opacity: 80%;
+  z-index: 1 !important;
+  width: 1000px;
+  height: 600px;
+  left: 50%;
+  top: 50%;
+  align-self: center;
+  justify-self: center;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 8px 0 $navbar_background_dark;
+  transition: 0.3s;
+  animation-name: animatetop;
+  animation-duration: 0.6s;
+}
+
+/* Add Animation */
+@keyframes animatetop {
+  from {
+    top: -000px;
+    opacity: 0;
+  }
+  to {
+    top: 50%;
+    opacity: 80%;
+  }
+}
+
+.card-header {
+  display: flex;
+  height: 50px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 30px;
+}
+.card-close {
+  width: 35px;
+  height: 35px;
+  //   padding-right: 50px;
+  background-color: $navbar_background_dark;
+  font-family: $app_font;
+  outline: none;
+  border: none;
+  margin-right: 15px;
+  color: $button_background;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+.card-body {
+  padding: 30px;
+  height: 70%;
+}
+
+.card-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 10px;
+}
+
+.card-group {
+  display: flex;
+  height: 80%;
+}

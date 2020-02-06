@@ -1,10 +1,8 @@
 export const bfs_dfs = (grid, start, finish, algorithm) => {
   if (!start || !finish || start === finish) return [];
   let visitedInOrder = [];
-  console.log(start);
   let structure = [];
   structure.push(start);
-  console.log(structure);
   let currentVertex;
   let neighbors = [];
 
@@ -12,13 +10,11 @@ export const bfs_dfs = (grid, start, finish, algorithm) => {
   if (algorithm === "dfs") {
     while (structure.length) {
       currentVertex = structure.pop();
-      console.log("i am doing dfs");
       currentVertex.isVisited = true;
 
       if (currentVertex === finish) return visitedInOrder;
       visitedInOrder.push(currentVertex);
       neighbors = getNeighbors(grid, currentVertex);
-      console.log(`Neighbors lsit is : ${neighbors}`);
       neighbors.forEach(neighbor => {
         if (!neighbor.isVisited) {
           neighbor.previousVertex = currentVertex;
