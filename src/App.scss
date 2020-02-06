@@ -195,7 +195,7 @@ body {
   bottom: 1px;
   top: auto;
 }
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 500px) {
   #forkongithub {
     position: fixed;
     display: block;
@@ -217,5 +217,12 @@ body {
     -moz-transform: rotate(45deg);
     -o-transform: rotate(45deg);
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
+  }
+}
+@media screen and (max-width: 511px) {
+  .card {
+    width: 400px;
+    text-align: center;
+    color: red;
   }
 }

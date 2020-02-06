@@ -4,6 +4,7 @@ import GridState from "./context/grid/GridState";
 import PathfinderVisualizer from "./PathfinderVisualizer/PathfinderVisualizer";
 import Navbar from "./Components/Navbar";
 import { Dialog } from "./Components/Dialog";
+import { MobileRoute } from "./Components/MobileRoute";
 function App() {
   return (
     <GridState>
@@ -15,7 +16,7 @@ function App() {
         </span>
         <Navbar />
         <PathfinderVisualizer />
-        <Dialog />
+        {window.innerWidth > 511 ? <Dialog /> : <MobileRoute />}
       </div>
     </GridState>
   );
