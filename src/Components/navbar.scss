@@ -1,19 +1,45 @@
+@import url("https://fonts.googleapis.com/css?family=Ubuntu:400,500&display=swap");
+
+$navbar_background: #12375a;
+$navbar_background_dark: #071421;
+$button_background: #ffef47;
+$text_color: #87edff;
+$text_color2: #ff8266;
+$app_font: "Ubuntu", sans-serif;
 .container {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
   width: 100%;
-  height: 50px;
-  background-color: black;
+  height: 30px;
+  background-color: $navbar_background;
   z-index: 0;
   top: 0px;
   position: absolute;
-  color: white;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  color: #87edff;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  -webkit-box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.28);
+  box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.28);
+  font-family: $app_font;
 }
 
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: $navbar_background;
+  width: 100%;
+  height: 30px;
+  color: $navbar_background_dark;
+  font-family: $app_font;
+}
+.footer p {
+  text-align: center;
+  //   padding: auto;
+  //   margin: 10px;
+}
 .main-nav {
   display: flex;
   flex-direction: row;
@@ -28,5 +54,82 @@
 
 .btn {
   padding: 10px 10px;
+  width: 100px;
+  background-color: $button_background;
   margin: auto 20px;
+  color: $navbar_background;
+  font-family: $app_font;
+  cursor: pointer;
+}
+
+.algo-methods {
+  display: block;
+  margin-top: 80px;
+  text-align: center;
+  color: #87edff;
+  font-family: $app_font;
+}
+
+.underlined-a {
+  text-decoration: none;
+  color: aqua;
+  padding-bottom: 0.15em;
+  box-sizing: border-box;
+  box-shadow: inset 0 -0.2em 0 aqua;
+  transition: 0.2s;
+  &:hover {
+    color: #222;
+    box-shadow: inset 0 -2em 0 aqua;
+    transition: all 0.45s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+}
+
+.brk-btn {
+  cursor: pointer;
+
+  padding: 10px 10px;
+  width: 100px;
+  margin: auto 20px;
+  font-family: $app_font;
+  position: relative;
+  background: none;
+  color: $button_background;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 0.2em solid $button_background;
+  //   padding: 0.5em 1em;
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 10%;
+    background: $navbar_background;
+    height: 0.3em;
+    right: 20%;
+    top: -0.21em;
+    transform: skewX(-45deg);
+    -webkit-transition: all 0.45s cubic-bezier(0.86, 0, 0.07, 1);
+    transition: all 0.45s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 10%;
+    background: $navbar_background;
+    height: 0.3em;
+    left: 20%;
+    bottom: -0.25em;
+    transform: skewX(45deg);
+    -webkit-transition: all 0.45 cubic-bezier(0.86, 0, 0.07, 1);
+    transition: all 0.45s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+  &:hover {
+    &::before {
+      right: 80%;
+    }
+    &::after {
+      left: 80%;
+    }
+  }
 }

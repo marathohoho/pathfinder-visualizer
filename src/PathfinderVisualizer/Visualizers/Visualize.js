@@ -1,7 +1,34 @@
-export const animateShortestPath = backtrackRoute => {
+export const animateShortestPath = (starting_point, backtrackRoute) => {
+  const start_row = starting_point.start_vertex_row;
+  const start_col = starting_point.start_vertex_col;
   for (let i = 0; i < backtrackRoute.length; i++) {
     setTimeout(() => {
       const vertex = backtrackRoute[i];
+      const row = vertex.position.row;
+      const col = vertex.position.col;
+      /* determine the direction at which the move will go. 1 of 8 directions */
+      /* right, down-right, down, down-left .... up, up-right */
+      const arrow = document.getElementById("start-svg");
+      if (i === 0) {
+        console.log("inside if statement");
+        console.log(vertex.position);
+        if (row === start_row && col === start_col + 1)
+          arrow.style.transform = "rotate(0deg)";
+        else if (row === start_row + 1 && col === start_col + 1)
+          arrow.style.transform = "rotate(45deg)";
+        else if (row === start_row + 1 && col === start_col)
+          arrow.style.transform = "rotate(90deg)";
+        else if (row === start_row + 1 && col === start_col - 1)
+          arrow.style.transform = "rotate(135deg)";
+        else if (row === start_row && col === start_col - 1)
+          arrow.style.transform = "rotate(180deg)";
+        else if (row === start_row - 1 && col === start_col - 1)
+          arrow.style.transform = "rotate(-135deg)";
+        else if (row === start_row - 1 && col === start_col)
+          arrow.style.transform = "rotate(-90deg)";
+        else if (row === start_row - 1 && col === start_col + 1)
+          arrow.style.transform = "rotate(-45deg)";
+      }
       document.getElementById(
         `vertex-${vertex.position.row}-${vertex.position.col}`
       ).className = "vertex vertex-shortest-path";
@@ -12,11 +39,15 @@ export const animateShortestPath = backtrackRoute => {
   document.getElementById("root").style = "pointer-events: initial";
 };
 
-export const animateAlgorithm = (visitedInOrder, backtrackedVertices) => {
+export const animateAlgorithm = (
+  starting_point,
+  visitedInOrder,
+  backtrackedVertices
+) => {
   for (let i = 0; i <= visitedInOrder.length; i++) {
     if (i === visitedInOrder.length) {
       setTimeout(() => {
-        animateShortestPath(backtrackedVertices);
+        animateShortestPath(starting_point, backtrackedVertices);
       }, 40 * i);
       return;
     }

@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css?family=Ubuntu:400,500&display=swap");
+
+$navbar_background: #12375a;
+$navbar_background_dark: #071421;
+$button_background: #ffef47;
+$text_color: #87edff;
+$text_color2: #ff8266;
+$app_font: "Ubuntu", sans-serif;
+
+html,
+body {
+  height: 100%;
+  /* overflow-x: hidden; */
+  width: 100%;
+}
+.App {
+  background-size: cover;
+  width: 100%;
+  overflow-x: hidden;
+}
+.grid {
+  text-align: center;
+  align-content: center;
+}
+
+.card {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+  font-family: $app_font;
+  color: $button_background;
+  background-color: $navbar_background_dark;
+  width: 50%;
+  border: 5px;
+  border-radius: 10px;
+  position: fixed;
+  opacity: 0.9;
+  z-index: 10;
+  width: 1000px;
+  height: 600px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  align-self: center;
+  justify-self: center;
+  box-shadow: 0 4px 8px 0 $navbar_background_dark;
+  transition: 0.3s;
+  -webkit-animation-name: animatetop; /* Safari & Chrome */
+  -moz-animation-name: animatetop; /* Firefox */
+  -ms-animation-name: animatetop; /* Internet Explorer */
+  -o-animation-name: animatetop; /* Opera */
+  animation-name: animatetop; /* W3C */
+  animation-duration: 0.6s;
+}
+
+/* Add Animation */
+@-moz-keyframes animatetop {
+  0% {
+    top: -000px;
+    opacity: 0;
+  }
+  100% {
+    top: 50%;
+    opacity: 0.9;
+  }
+}
+
+@-webkit-keyframes animatetop {
+  0% {
+    top: -000px;
+    opacity: 0;
+  }
+  100% {
+    top: 50%;
+    opacity: 0.9;
+  }
+}
+@-o-keyframes animatetop {
+  0% {
+    top: -000px;
+    opacity: 0;
+  }
+  100% {
+    top: 50%;
+    opacity: 0.9;
+  }
+}
+@keyframes animatetop {
+  0% {
+    top: -000px;
+    opacity: 0;
+  }
+  100% {
+    top: 50%;
+    opacity: 0.9;
+  }
+}
+
+.card-header {
+  display: flex;
+  height: 50px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 30px;
+  margin-top: 30px;
+}
+// .card-header h1 {
+//   margin-top: 50px;
+// }
+.card-close {
+  width: 35px;
+  height: 35px;
+  //   padding-right: 50px;
+  background-color: $navbar_background_dark;
+  font-family: $app_font;
+  outline: none;
+  border: none;
+  margin-right: 15px;
+  color: $button_background;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+.card-body {
+  display: flex;
+  padding: 30px;
+  height: 70%;
+  display: flex;
+  height: 80%;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.card-body p {
+  margin: 0px 100px;
+  font-family: $app_font;
+  font-size: 18px;
+}
+
+.card-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  bottom: 10px;
+}
+
+.card-group {
+  display: flex;
+  height: 80%;
+  flex-direction: column;
+}
+
+.card-group img {
+  position: relative;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: auto;
+  opacity: 1;
+}
