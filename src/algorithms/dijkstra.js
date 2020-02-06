@@ -13,8 +13,6 @@ export const dijkstra = (
   allowDiagonal
 ) => {
   const visitedInOrder = [];
-  // assign start vertex distance 0
-  // by default the vertices are infinite distance away from the start
   start.distance = 0;
   // get all vertices
   const unvisitedVertices = getAllVertices(grid);
@@ -32,8 +30,6 @@ export const dijkstra = (
     );
     closestVertex.isVisited = true;
     visitedInOrder.push(closestVertex);
-    // before was like this :
-    // updateUnvisitedNeighbors(closestVertex, grid);
     if (closestVertex === finish) return visitedInOrder;
   }
 };

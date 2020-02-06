@@ -1,55 +1,85 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import "../App.scss";
 import "../Components/navbar.scss";
+import placing_img from "../static/placing.png";
+import draw_wall from "../static/wall.png";
+import algorithms from "../static/algorithms.png";
 
 export const Dialog = () => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
 
-  const markEndPoints = step => {
+  const intro = step => {
     if (step !== 1) {
       return null;
     }
     return (
       <div className="card-group">
         {" "}
-        <h1>Choose Algorithm</h1>
+        <h2>What is pathfinding Algorithm?</h2>
+        <p>
+          Pathfinding or pathing is the plotting, by a computer application, of
+          the shortest route between two points. It is a more practical variant
+          on solving mazes. This field of research is based heavily on
+          Dijkstra's algorithm for finding the shortest path on a weighted
+          graph. Pathfinding is closely related to the shortest path problem,
+          within graph theory, which examines how to identify the path that best
+          meets some criteria (shortest, cheapest, fastest, etc) between two
+          points in a large network.
+        </p>
       </div>
     );
   };
-  const chooseAlgorithm = step => {
+  const markEndPoints = step => {
     if (step !== 2) {
       return null;
     }
     return (
       <div className="card-group">
-        <h1>Choose Algorithm</h1>
+        <h2>Place the end points</h2>
+        <img src={placing_img} alt="Placing endpoints" />
       </div>
     );
   };
-  const chooseHeuristics = step => {
+  const drawWall = step => {
     if (step !== 3) {
       return null;
     }
     return (
       <div className="card-group">
-        <h1>Choose heuristics if applicable</h1>
+        <h2>Draw a wall</h2>
+        <img src={draw_wall} alt="Placing endpoints" />
       </div>
     );
   };
-  const startVisualization = step => {
+  const chooseAlgorithm = step => {
     if (step !== 4) {
       return null;
     }
     return (
       <div className="card-group">
-        <h1>Start the visualization</h1>
+        <h2>
+          Choose a pathfinding algorithm and heuristic methods if applicable
+        </h2>
+        <img src={algorithms} alt="Placing endpoints" />
+      </div>
+    );
+  };
+
+  const startVisualization = step => {
+    if (step !== 5) {
+      return null;
+    }
+    return (
+      <div className="card-group">
+        <h2>Start the visualization</h2>
+        <p>Press start</p>
       </div>
     );
   };
 
   const _next = () => {
     let currentStep = step;
-    currentStep = currentStep >= 3 ? 4 : currentStep + 1;
+    currentStep = currentStep >= 6 ? 6 : currentStep + 1;
     setStep(currentStep);
   };
 
@@ -60,7 +90,7 @@ export const Dialog = () => {
   };
 
   const nextButton = () => {
-    if (step < 4)
+    if (step < 5)
       return (
         <button className="brk-btn" onClick={() => _next()}>
           Next
@@ -68,8 +98,8 @@ export const Dialog = () => {
       );
     else
       return (
-        <button className="brk-btn disabled" disabled>
-          Next
+        <button className="brk-btn" onClick={() => closeTutorial()}>
+          Close
         </button>
       );
   };
@@ -89,6 +119,7 @@ export const Dialog = () => {
   };
   const closeTutorial = () => {
     document.getElementById("card").style.display = "none";
+    setStep(1);
   };
 
   const skipMe = () => {
@@ -101,21 +132,22 @@ export const Dialog = () => {
   return (
     <div className="card" id="card">
       <div className="card-header">
-        <h1> ..here comes mini tutorial;</h1>
+        <h1> Pathfinding Algorithm Tutorial</h1>
       </div>
       <div className="card-body">
-        <p>Step {step}</p>
+        {/* {step > 1 ? <p>Step {step}</p> : ""} */}
+        {intro(step)}
         {markEndPoints(step)}
+        {drawWall(step)}
         {chooseAlgorithm(step)}
-        {chooseHeuristics(step)}
         {startVisualization(step)}
-      </div>
-      <div className="card-buttons">
-        <div>
-          {prevButton()}
-          {nextButton()}
+        <div className="card-buttons">
+          <div>
+            {prevButton()}
+            {nextButton()}
+          </div>
+          <div>{skipMe()}</div>
         </div>
-        <div>{skipMe()}</div>
       </div>
     </div>
   );

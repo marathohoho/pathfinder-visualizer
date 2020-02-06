@@ -60,23 +60,6 @@ const Vertex = props => {
       />
     </svg>
   );
-  //   const start_circle = (
-  //     <svg
-  //       id="start-svg"
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       xmlnsXlink="http://www.w3.org/1999/xlink"
-  //       width="27px"
-  //       height="27px"
-  //       viewBox="0 0 54 54"
-  //       style={{ transform: "rotate(0)" }}
-  //     >
-  //       <path
-  //         fillRule="evenodd"
-  //         fill="#12375a"
-  //         d="M50.000,25.000 C50.000,38.807 38.807,50.000 25.000,50.000 C11.193,50.000 -0.000,38.807 -0.000,25.000 C-0.000,11.193 11.193,-0.000 25.000,-0.000 C38.807,-0.000 50.000,11.193 50.000,25.000 Z"
-  //       />
-  //     </svg>
-  //   );
   return (
     <td
       id={`vertex-${position.row}-${position.col}`}
