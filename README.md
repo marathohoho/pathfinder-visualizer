@@ -4,8 +4,6 @@
 
 > Javascript, React, ReactContext, HTML, SCSS
 
-## Table of Contents (Optional)
-
 ## Installation
 
 ### Clone
@@ -18,4 +16,3 @@
 $ npm install
 $ npm start
 ```
-
