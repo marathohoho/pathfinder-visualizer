@@ -3,7 +3,7 @@ import GridContext from "../context/grid/gridContext";
 import "./PathfinderVisualizer.css";
 import Vertex from "./Vertex/Vertex";
 import DistancePicker from "../Components/Methods";
-
+import GridAnnotaion from "../Components/GridAnnotation";
 import {
   createInitialGrid,
   createGridWithWalls,
@@ -40,7 +40,6 @@ const PathfinderVisualizer = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line
     setGrid(createInitialGrid(start_finish));
   }, []);
 
@@ -162,6 +161,7 @@ const PathfinderVisualizer = () => {
         getDistanceMethod={chooseDistanceMethod}
         chooseDiagonal={chooseDiagonalMethod}
       />
+      <GridAnnotaion />
       <table className="grid" draggable="false">
         <tbody className="grid" draggable="false">
           {grid.map((row, row_index) => {

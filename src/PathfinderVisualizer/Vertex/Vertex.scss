@@ -1,7 +1,12 @@
-$wall_color: #071421;
+@import url("https://fonts.googleapis.com/css?family=Ubuntu:400,500&display=swap");
+
+$navbar_background: #12375a;
+$navbar_background_dark: #071421;
 $button_background: #ffef47;
 $text_color: #87edff;
 $text_color2: #ff8266;
+$app_font: "Ubuntu", sans-serif;
+$wall_color: #071421;
 
 .vertex {
   opacity: 0.75;
@@ -132,4 +137,47 @@ $text_color2: #ff8266;
     transform: scale(1);
     background-color: $button_background;
   }
+}
+
+.grid-annotations {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.grid-annotations .group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: $app_font;
+  font-size: 8px;
+  font-weight: lighter;
+  color: $button_background;
+  margin-left: 50px;
+}
+
+.box {
+  opacity: 1;
+  width: 25px;
+  height: 25px;
+  outline: 1px solid rgba(255, 255, 255, 0.699);
+  background: inherit;
+  display: inline-block;
+  background: $button_background;
+  margin-right: 20px;
+}
+.box-wall {
+  background-color: $wall_color;
+}
+.boxt-start {
+  background: $button_background;
+}
+
+.box-finish {
+  background: red;
+}
+
+.box-visited {
+  background: rgba(0, 190, 218, 0.75);
 }
