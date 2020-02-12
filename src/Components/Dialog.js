@@ -4,6 +4,7 @@ import "../Components/navbar.scss";
 import placing_img from "../static/placing.png";
 import draw_wall from "../static/wall.png";
 import algorithms from "../static/algorithms.png";
+import weighted_node from "../static/weighted_node.png";
 
 export const Dialog = () => {
   const [step, setStep] = useState(1);
@@ -64,9 +65,24 @@ export const Dialog = () => {
       </div>
     );
   };
+  const placeWeights = step => {
+    if (step !== 5) {
+      return null;
+    }
+    return (
+      <div className="card-group">
+        <h2>
+          In order to get full experience with Dijkstra algorithm, you need to
+          place weighted nodes. Place the nodes by clicking on the grid and
+          holding "Ctrl" key
+        </h2>
+        <img src={weighted_node} alt="Placing endpoints" />
+      </div>
+    );
+  };
 
   const startVisualization = step => {
-    if (step !== 5) {
+    if (step !== 6) {
       return null;
     }
     return (
@@ -79,7 +95,7 @@ export const Dialog = () => {
 
   const _next = () => {
     let currentStep = step;
-    currentStep = currentStep >= 6 ? 6 : currentStep + 1;
+    currentStep = currentStep >= 7 ? 7 : currentStep + 1;
     setStep(currentStep);
   };
 
@@ -90,7 +106,7 @@ export const Dialog = () => {
   };
 
   const nextButton = () => {
-    if (step < 5)
+    if (step < 6)
       return (
         <button className="brk-btn" onClick={() => _next()}>
           Next
@@ -141,6 +157,7 @@ export const Dialog = () => {
         {drawWall(step)}
         {chooseAlgorithm(step)}
         {startVisualization(step)}
+        {placeWeights(step)}
         <div className="card-buttons">
           <div>
             {prevButton()}

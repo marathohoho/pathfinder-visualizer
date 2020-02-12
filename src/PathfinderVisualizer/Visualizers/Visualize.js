@@ -10,8 +10,6 @@ export const animateShortestPath = (starting_point, backtrackRoute) => {
       /* right, down-right, down, down-left .... up, up-right */
       const arrow = document.getElementById("start-svg");
       if (i === 0) {
-        console.log("inside if statement");
-        console.log(vertex.position);
         if (row === start_row && col === start_col + 1)
           arrow.style.transform = "rotate(0deg)";
         else if (row === start_row + 1 && col === start_col + 1)
@@ -36,7 +34,8 @@ export const animateShortestPath = (starting_point, backtrackRoute) => {
   }
   document.getElementById("btnStart").disabled = false;
   document.getElementById("btnReset").disabled = false;
-  document.getElementById("root").style = "pointer-events: initial";
+  document.getElementById("table").style = "pointer-events: initial";
+  document.getElementById("disable-div").style = "pointer-events: initial";
 };
 
 export const animateAlgorithm = (
@@ -44,11 +43,12 @@ export const animateAlgorithm = (
   visitedInOrder,
   backtrackedVertices
 ) => {
+  const animationTime = 40;
   for (let i = 0; i <= visitedInOrder.length; i++) {
     if (i === visitedInOrder.length) {
       setTimeout(() => {
         animateShortestPath(starting_point, backtrackedVertices);
-      }, 40 * i);
+      }, animationTime * i);
       return;
     }
     setTimeout(() => {
@@ -56,10 +56,9 @@ export const animateAlgorithm = (
       const col = visitedInOrder[i].position.col;
       const isStart = visitedInOrder[i].isStart;
       const isFinish = visitedInOrder[i].isFinish;
-
       if (!(isStart || isFinish))
         document.getElementById(`vertex-${row}-${col}`).className =
           "vertex vertex-visited";
-    }, 40 * i);
+    }, animationTime * i);
   }
 };

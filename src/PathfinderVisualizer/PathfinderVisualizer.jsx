@@ -29,7 +29,8 @@ const PathfinderVisualizer = () => {
     setFinish,
     setDistanceMethod,
     setAllowDiagonal,
-    setAlgorithm
+    setAlgorithm,
+    algorithm
   } = gridContext;
 
   const start_finish = {
@@ -109,22 +110,75 @@ const PathfinderVisualizer = () => {
     }
   };
 
-  const handleMouseDown = position => {
+  const handleMouseDown = (event, position) => {
     const { row, col } = position;
-
+    let settingWall = true;
+    let settingWeight = false;
+    if (event.ctrlKey) {
+      //place a weight when ctrl is pressed
+      if (
+        !grid[row][col].isStart &&
+        !grid[row][col].isFinish &&
+        algorithm === "dijkstra"
+      ) {
+        settingWall = false;
+        settingWeight = true;
+        const weightGrid = createGridWithWalls(
+          grid,
+          position,
+          settingWall,
+          settingWeight
+        );
+        setGrid(weightGrid);
+        updateGrid(weightGrid);
+        setMouseIsPressed(true);
+      }
+    }
     if (!grid[row][col].isStart && !grid[row][col].isFinish) {
-      const wallGrid = createGridWithWalls(grid, position);
+      const wallGrid = createGridWithWalls(
+        grid,
+        position,
+        settingWall,
+        settingWeight
+      );
       setGrid(wallGrid);
       updateGrid(wallGrid);
       setMouseIsPressed(true);
     }
   };
 
-  const handleMouseEnter = position => {
-    const { row, col } = position;
+  const handleMouseEnter = (event, position) => {
     if (!mouseIsPressed) return;
+    let settingWall = true;
+    let settingWeight = false;
+    const { row, col } = position;
+    if (event.ctrlKey) {
+      //place a weight when ctrl is pressed
+      if (
+        !grid[row][col].isStart &&
+        !grid[row][col].isFinish &&
+        algorithm === "dijkstra"
+      ) {
+        settingWall = false;
+        settingWeight = true;
+        const weightGrid = createGridWithWalls(
+          grid,
+          position,
+          settingWall,
+          settingWeight
+        );
+        setGrid(weightGrid);
+        updateGrid(weightGrid);
+      }
+    }
+
     if (!grid[row][col].isStart && !grid[row][col].isFinish) {
-      const wallGrid = createGridWithWalls(grid, position);
+      const wallGrid = createGridWithWalls(
+        grid,
+        position,
+        settingWall,
+        settingWeight
+      );
       setGrid(wallGrid);
       updateGrid(wallGrid);
     }
@@ -155,14 +209,14 @@ const PathfinderVisualizer = () => {
   //     updateGrid(grid);
   //   };
   return (
-    <div>
+    <div id="disable-div">
       <DistancePicker
         getWhichAlgorithm={chooseAlgorithm}
         getDistanceMethod={chooseDistanceMethod}
         chooseDiagonal={chooseDiagonalMethod}
       />
-      <GridAnnotaion />
-      <table className="grid" draggable="false">
+      <GridAnnotaion algorithm={algorithm} />
+      <table className="grid" draggable="false" id="table">
         <tbody className="grid" draggable="false">
           {grid.map((row, row_index) => {
             return (
@@ -175,7 +229,8 @@ const PathfinderVisualizer = () => {
                     isWall,
                     isVisited,
                     isPath,
-                    distance
+                    distance,
+                    weight
                   } = vertex;
                   return (
                     <Vertex
@@ -183,8 +238,9 @@ const PathfinderVisualizer = () => {
                       position={position}
                       isFinish={isFinish}
                       isStart={isStart}
-                      onMouseDown={position => handleMouseDown(position)}
-                      onMouseEnter={position => handleMouseEnter(position)}
+                      weight={weight}
+                      onMouseDown={event => handleMouseDown(event, position)}
+                      onMouseEnter={event => handleMouseEnter(event, position)}
                       onMouseUp={position => handleMouseUp(position)}
                       onDragStart={e => handleDragStart(e, position, vertex)}
                       onDragOver={event => handleDragOver(event, position)}

@@ -19,7 +19,6 @@ export const dijkstra = (
   while (unvisitedVertices.length !== 0) {
     getTheClosestVerticesFirst(unvisitedVertices);
     const closestVertex = unvisitedVertices.shift();
-    console.log("distance of closest vertex is: ", closestVertex.distance);
     if (closestVertex.isWall) continue;
     if (closestVertex.distance === Infinity) return visitedInOrder;
     updateUnvisitedNeighbors(
@@ -88,9 +87,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
         if (
           !t.isVisited &&
           !t.isWall &&
-          t.distance > vertex.distance + dDistance
+          t.distance > vertex.distance + dDistance + t.weight
         ) {
-          t.distance = vertex.distance + dDistance;
+          t.distance = t.weight + vertex.distance + dDistance;
           t.previousVertex = vertex;
         }
       }
@@ -99,9 +98,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       if (
         !t.isVisited &&
         !t.isWall &&
-        t.distance > vertex.distance + hVDistance
+        t.distance > vertex.distance + hVDistance + t.weight
       ) {
-        t.distance = vertex.distance + hVDistance;
+        t.distance = t.weight + vertex.distance + hVDistance;
         t.previousVertex = vertex;
       }
 
@@ -111,9 +110,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
         if (
           !t.isVisited &&
           !t.isWall &&
-          t.distance > vertex.distance + dDistance
+          t.distance > vertex.distance + dDistance + t.weight
         ) {
-          t.distance = vertex.distance + dDistance;
+          t.distance = t.weight + vertex.distance + dDistance;
           t.previousVertex = vertex;
         }
       }
@@ -125,9 +124,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       if (
         !t.isVisited &&
         !t.isWall &&
-        t.distance > vertex.distance + hVDistance
+        t.distance > vertex.distance + hVDistance + t.weight
       ) {
-        t.distance = vertex.distance + hVDistance;
+        t.distance = vertex.distance + t.weight + hVDistance;
         t.previousVertex = vertex;
       }
     }
@@ -140,9 +139,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
         if (
           !t.isVisited &&
           !t.isWall &&
-          t.distance > vertex.distance + dDistance
+          t.distance > vertex.distance + dDistance + t.weight
         ) {
-          t.distance = vertex.distance + dDistance;
+          t.distance = vertex.distance + t.weight + dDistance;
           t.previousVertex = vertex;
         }
       }
@@ -151,9 +150,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       if (
         !t.isVisited &&
         !t.isWall &&
-        t.distance > vertex.distance + hVDistance
+        t.distance > vertex.distance + hVDistance + t.weight
       ) {
-        t.distance = vertex.distance + hVDistance;
+        t.distance = vertex.distance + t.weight + hVDistance;
         t.previousVertex = vertex;
       }
 
@@ -163,9 +162,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
         if (
           !t.isVisited &&
           !t.isWall &&
-          t.distance > vertex.distance + dDistance
+          t.distance > vertex.distance + dDistance + t.weight
         ) {
-          t.distance = vertex.distance + dDistance;
+          t.distance = vertex.distance + t.weight + dDistance;
           t.previousVertex = vertex;
         }
       }
@@ -176,9 +175,9 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       if (
         !t.isVisited &&
         !t.isWall &&
-        t.distance > vertex.distance + hVDistance
+        t.distance > vertex.distance + hVDistance + t.weight
       ) {
-        t.distance = vertex.distance + hVDistance;
+        t.distance = t.weight + vertex.distance + hVDistance;
         t.previousVertex = vertex;
       }
     }
@@ -189,7 +188,8 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       !grid[row - 1][col].isVisited &&
       !grid[row - 1][col].isWall
     ) {
-      grid[row - 1][col].distance = vertex.distance + 1;
+      grid[row - 1][col].distance =
+        vertex.distance + 1 + grid[row - 1][col].weight;
       grid[row - 1][col].previousVertex = vertex;
     }
     if (
@@ -197,7 +197,8 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       !grid[row][col + 1].isVisited &&
       !grid[row][col + 1].isWall
     ) {
-      grid[row][col + 1].distance = vertex.distance + 1;
+      grid[row][col + 1].distance =
+        vertex.distance + 1 + grid[row][col + 1].weight;
       grid[row][col + 1].previousVertex = vertex;
     }
     if (
@@ -205,7 +206,8 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       !grid[row + 1][col].isVisited &&
       !grid[row + 1][col].isWall
     ) {
-      grid[row + 1][col].distance = vertex.distance + 1;
+      grid[row + 1][col].distance =
+        vertex.distance + 1 + grid[row + 1][col].weight;
       grid[row + 1][col].previousVertex = vertex;
     }
     if (
@@ -213,7 +215,8 @@ const getUnvisitedNeighbors = (vertex, grid, distanceMethod, allowDiagonal) => {
       !grid[row][col - 1].isVisited &&
       !grid[row][col - 1].isWall
     ) {
-      grid[row][col - 1].distance = vertex.distance + 1;
+      grid[row][col - 1].distance =
+        vertex.distance + 1 + grid[row][col - 1].weight;
       grid[row][col - 1].previousVertex = vertex;
     }
   }

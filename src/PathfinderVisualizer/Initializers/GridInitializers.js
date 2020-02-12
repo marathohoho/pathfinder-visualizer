@@ -27,6 +27,7 @@ const createVertex = (position, start_finish) => {
     isFinish:
       position.row === finish_vertex_row && position.col === finish_vertex_col,
     distance: Infinity,
+    weight: 0,
     distanceToThis: 0,
     heuristic: 0,
     isVisited: false,
@@ -40,15 +41,21 @@ const createVertex = (position, start_finish) => {
   };
 };
 
-export const createGridWithWalls = (grid, position) => {
+export const createGridWithWalls = (
+  grid,
+  position,
+  settingWall = true,
+  settingWeight = false
+) => {
   const wallGrid = [...grid];
   const vertex = wallGrid[position.row][position.col];
   const newVertex = {
     ...vertex,
-    isWall: !vertex.isWall, //changed here
+    isWall: settingWall ? !vertex.isWall : vertex.isWall,
     isPath: false,
     isVisited: false,
     distance: Infinity,
+    weight: settingWeight ? 100 : 0,
     distanceToThis: Infinity,
     heuristic: Infinity,
     draggable: false,
@@ -85,6 +92,7 @@ export const createGridWithWallsOnRowOrColumn = (
           isPath: false,
           isVisited: false,
           distance: Infinity,
+          weight: 0,
           distanceToThis: Infinity,
           heuristic: Infinity,
           draggable: false,
@@ -108,6 +116,7 @@ export const createGridWithWallsOnRowOrColumn = (
           isPath: false,
           isVisited: false,
           distance: Infinity,
+          weight: 0,
           distanceToThis: Infinity,
           heuristic: Infinity,
           draggable: false,
@@ -131,6 +140,7 @@ export const swapVertices = (grid, vertex, new_position) => {
     isStart: false,
     isFinish: false,
     distance: Infinity,
+    weight: 0,
     distanceToThis: 0,
     heuristic: 0,
     isVisited: false,

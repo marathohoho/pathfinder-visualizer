@@ -23,7 +23,9 @@ import {
   SET_LAST_TRANSLATE_COL,
   SET_DISTANCE_METHOD,
   SET_ALLOW_DIAGONAL,
-  SET_ALGORITHM
+  SET_ALGORITHM,
+  SET_HALT,
+  SET_TIMEOUTIDS
 } from "../types.js";
 
 export default (state, action) => {
@@ -85,6 +87,16 @@ export default (state, action) => {
         algorithm: action.payload
       };
 
+    case SET_HALT:
+      return {
+        ...state,
+        halt: action.payload
+      };
+    case SET_TIMEOUTIDS:
+      return {
+        ...state,
+        timeOutIds: action.payload
+      };
     default:
       return state;
   }

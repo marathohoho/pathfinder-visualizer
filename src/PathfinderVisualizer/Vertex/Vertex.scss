@@ -7,7 +7,7 @@ $text_color: #87edff;
 $text_color2: #ff8266;
 $app_font: "Ubuntu", sans-serif;
 $wall_color: #071421;
-
+$vertex-background: #1c568d;
 .vertex {
   opacity: 0.75;
   width: 25px;
@@ -180,4 +180,13 @@ $wall_color: #071421;
 
 .box-visited {
   background: rgba(0, 190, 218, 0.75);
+}
+
+.box-weighted {
+  background: $vertex-background;
+  color: $text_color2;
+}
+
+.box-weighted-fadeout {
+  opacity: 0.3;
 }

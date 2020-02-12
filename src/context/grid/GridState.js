@@ -25,13 +25,15 @@ import {
   SET_LAST_TRANSLATE_COL,
   SET_DISTANCE_METHOD,
   SET_ALLOW_DIAGONAL,
-  SET_ALGORITHM
+  SET_ALGORITHM,
+  SET_HALT,
+  SET_TIMEOUTIDS
 } from "../types.js";
 
 const GridState = props => {
   const initialState = {
     grid: [],
-
+    timeOutIds: [],
     mouseIsPressed: false,
 
     start_vertex_row: START_VERTEX_ROW_,
@@ -53,7 +55,7 @@ const GridState = props => {
     distanceMethod: "manhattan",
 
     allowDiagonal: false,
-
+    halt: false,
     algorithm: "dijkstra"
   };
 
@@ -61,6 +63,9 @@ const GridState = props => {
 
   const setGrid = grid => {
     dispatch({ type: SET_GRID, payload: grid });
+  };
+  const setTimeoutIds = timeOutIds => {
+    dispatch({ type: SET_TIMEOUTIDS, payload: timeOutIds });
   };
 
   const setStart = position => {
@@ -108,6 +113,10 @@ const GridState = props => {
   const setAlgorithm = algorithm => {
     dispatch({ type: SET_ALGORITHM, payload: algorithm });
   };
+
+  const setHalt = halt => {
+    dispatch({ type: SET_HALT, payload: halt });
+  };
   return (
     <gridContext.Provider
       value={{
@@ -137,7 +146,11 @@ const GridState = props => {
         allowDiagonal: state.allowDiagonal,
         setAllowDiagonal,
         setAlgorithm,
-        algorithm: state.algorithm
+        setHalt,
+        algorithm: state.algorithm,
+        halt: state.halt,
+        setTimeoutIds,
+        timeOutIds: state.timeOutIds
       }}
     >
       {props.children}

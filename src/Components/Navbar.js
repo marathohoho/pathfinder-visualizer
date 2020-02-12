@@ -7,6 +7,7 @@ import { astar } from "../algorithms/astar";
 import { animateAlgorithm } from "../PathfinderVisualizer/Visualizers/Visualize";
 import { bfs_dfs } from "../algorithms/bfs_dfs";
 import { ROWS, COLUMNS } from "../parameters";
+import { SET_ORIGINAL_COL } from "../context/types";
 
 function Navbar() {
   const gridContext = useContext(GridContext);
@@ -55,7 +56,8 @@ function Navbar() {
 
   const visualizeAlgorithm = () => {
     clearTheVisualOfVertex();
-    document.getElementById("root").style = "pointer-events: none";
+    document.getElementById("table").style = "pointer-events: none";
+    document.getElementById("disable-div").style = "pointer-events: none";
     document.getElementById("btnStart").disabled = true;
     document.getElementById("btnReset").disabled = true;
     for (let row = 0; row < ROWS; row++) {
@@ -107,8 +109,7 @@ function Navbar() {
           allowDiagonal
         );
     }
-    // console.log(grid);
-    // console.log(visitedInOrder);
+
     const backtrackedVertices = backtrackRoute(finishVertex, startVertex);
     animateAlgorithm(
       { start_vertex_row, start_vertex_col },
@@ -120,14 +121,12 @@ function Navbar() {
   const openTutorialCard = () => {
     document.getElementById("card").style.display = "block";
   };
+
   return (
     <div className="container">
       <h2>Pathfinder Algorithms Visualization</h2>
 
       <nav className="main-nav">
-        {/* <div className="algorithms-methods">
-          <h1>something</h1>
-        </div> */}
         <div className="buttons">
           <button
             id="btnStart"
